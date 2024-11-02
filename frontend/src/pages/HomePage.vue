@@ -1,17 +1,15 @@
 <template>
-  <div class="home-container">
-    <!-- Navigation Section (Login and Signup Links) -->
-    <nav class="nav-section">
-      <ul class="nav-links">
-        <li><router-link to="/login">Login</router-link></li>
-        <li><router-link to="/signup">Sign Up</router-link></li>
-      </ul>
-    </nav>
-
+  <div class="home-container" style="background-image: url('/HomePageBG.png');">
     <!-- Welcome Section -->
     <section class="welcome-section">
-      <h1>Welcome to Budgetwise</h1>
-      <p>Take control of your finances and achieve your goals with our intuitive personal finance dashboard.</p>
+      <div class="welcome-content">
+        <h1>Welcome to Budgetwise</h1>
+        <p>Take control of your finances and achieve your goals with our intuitive personal finance dashboard.</p>
+        <div class="nav-buttons">
+          <router-link to="/login" class="button-link">Login</router-link>
+          <router-link to="/signup" class="button-link">Sign Up</router-link>
+        </div>
+      </div>
     </section>
 
     <!-- Feature Highlights Section -->
@@ -32,7 +30,7 @@
 
     <!-- Footer Section -->
     <footer class="footer">
-      <p>&copy; 2024 Budgetwise. All rights reserved.</p>
+      <p>&copy; 2024 Budgetwise. Group 3 Project.</p>
     </footer>
   </div>
 </template>
@@ -46,56 +44,64 @@ export default {
 <style scoped>
 /* General Container */
 .home-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial, sans-serif';
+  background-size: cover;
+  background-position: center;
+  color: #ffffff;
+  min-height: 100vh;
+  height: 100%;
+  background-attachment: fixed;
+  padding: 0 20px;
 }
 
-/* Navigation Section */
-.nav-section {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 20px;
+/* Navigation Buttons in Welcome Section */
+.nav-buttons {
+  display: inline-flex;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 20px;
 }
 
-.nav-links {
-  list-style: none;
-  display: flex;
-  gap: 15px;
-}
-
-.nav-links li {
-  display: inline;
-}
-
-.nav-links a {
+.button-link {
+  padding: 15px 40px;
+  background-color: #ff5722;
+  color: #ffffff;
   text-decoration: none;
-  color: #007bff;
   font-weight: bold;
+  border-radius: 50px;
+  transition: background-color 0.3s, transform 0.3s;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+  font-size: 1.2rem;
 }
 
-.nav-links a:hover {
-  text-decoration: underline;
+.button-link:hover {
+  background-color: #e64a19;
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.4);
+  transform: translateY(-5px);
 }
 
 /* Welcome Section */
 .welcome-section {
   text-align: center;
-  padding: 40px 20px;
-  background-color: #f4f6f8;
-  border-radius: 8px;
+  padding: 100px 20px 60px;
+  background: rgba(0, 0, 0, 0.75);
+  border-radius: 16px;
   margin-bottom: 40px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
-.welcome-section h1 {
-  font-size: 2.5rem;
-  color: #333;
+.welcome-content h1 {
+  font-size: 4rem;
+  color: #00e5ff;
+  margin-bottom: 20px;
 }
 
-.welcome-section p {
-  font-size: 1.2rem;
-  color: #666;
-  margin: 20px 0;
+.welcome-content p {
+  font-size: 1.6rem;
+  color: #e0e0e0;
 }
 
 /* Features Section */
@@ -103,38 +109,49 @@ export default {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 30px;
+  padding: 40px 20px;
 }
 
 .feature-card {
   flex: 1;
-  min-width: 200px;
+  min-width: 250px;
   max-width: 300px;
-  padding: 20px;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  padding: 30px;
+  background-color: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
   text-align: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.feature-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
 }
 
 .feature-card h3 {
-  font-size: 1.5rem;
-  color: #333;
-  margin-bottom: 10px;
+  font-size: 1.8rem;
+  color: #00e5ff;
+  margin-bottom: 15px;
 }
 
 .feature-card p {
-  color: #666;
+  color: #e0e0e0;
+  font-size: 1.1rem;
 }
 
 /* Footer Section */
 .footer {
   text-align: center;
-  margin-top: 40px;
+  margin-top: 60px;
   padding: 20px;
-  background-color: #f8f9fa;
+  background-color: rgba(0, 0, 0, 0.85);
   border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  width: calc(100% - 40px);
+  margin: 20px auto;
 }
 
 .footer p {
