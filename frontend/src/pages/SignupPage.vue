@@ -48,6 +48,8 @@
 </template>
 
 <script>
+import api from '../api';
+
 export default {
   name: 'SignupPage',
   data() {
@@ -66,7 +68,7 @@ export default {
     };
   },
   methods: {
-    submitSignup() {
+    async submitSignup() {
       // Clear previous errors
       this.usernameError = '';
       this.emailError = '';
@@ -75,45 +77,62 @@ export default {
       this.lastNameError = '';
 
       // Basic frontend validation
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const namePattern = /^[a-zA-Z]+$/;
       if (!this.username) {
         this.usernameError = 'Username is required.';
-      } else if (this.usernameExists(this.username)) {
-        this.usernameError = 'Username already exists.';
+        return;
       }
-
       if (!this.email) {
         this.emailError = 'Email address is required.';
-      } else if (this.emailExists(this.email)) {
-        this.emailError = 'Email address is already registered.';
+        return;
+      } else if (!emailPattern.test(this.email)) {
+        this.emailError = 'Please enter a valid email address.';
+        return;
       }
-
       if (!this.firstName) {
         this.firstNameError = 'First Name is required.';
+        return;
+      } else if (!namePattern.test(this.firstName)) {
+        this.firstNameError = 'First Name must contain only letters.';
+        return;
       }
-
       if (!this.lastName) {
         this.lastNameError = 'Last Name is required.';
+        return;
+      } else if (!namePattern.test(this.lastName)) {
+        this.lastNameError = 'Last Name must contain only letters.';
+        return;
       }
-
       if (this.password !== this.confirmPassword) {
         this.passwordError = 'Passwords do not match.';
+        return;
       }
 
-      if (!this.usernameError && !this.emailError && !this.passwordError && !this.firstNameError && !this.lastNameError) {
-        console.log('User signed up with:', this.username, this.email, this.firstName, this.lastName, this.password);
+      try {
+        // Send data to the backend
+        const response = await api.post('/auth/signup', {
+          username: this.username,
+          email: this.email,
+          firstName: this.firstName,
+          lastName: this.lastName,
+          password: this.password
+        });
+        alert(response.data.message); // Notify the user on successful signup
+        this.$router.push('/login'); // Redirect to login page
+      } catch (error) {
+        if (error.response && error.response.data.error) {
+          if (error.response.data.error.includes('Username')) {
+            this.usernameError = error.response.data.error;
+          } else if (error.response.data.error.includes('Email')) {
+            this.emailError = error.response.data.error;
+          } else {
+            alert('An error occurred: ' + error.response.data.error);
+          }
+        } else {
+          alert('An unexpected error occurred.');
+        }
       }
-    },
-    usernameExists(username) {
-      // Placeholder logic for checking if the username exists
-      // This would be replaced with an actual API call
-      const existingUsernames = ['testuser', 'sampleuser'];
-      return existingUsernames.includes(username);
-    },
-    emailExists(email) {
-      // Placeholder logic for checking if the email exists
-      // This would be replaced with an actual API call
-      const existingEmails = ['test@example.com', 'sample@example.com'];
-      return existingEmails.includes(email);
     }
   }
 };
