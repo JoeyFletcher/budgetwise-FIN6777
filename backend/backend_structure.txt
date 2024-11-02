@@ -1,0 +1,27 @@
+budgetwise-backend/
+├── config/
+│   ├── dbConfig.js          # Database configuration (SQLite and PostgreSQL)
+├── controllers/
+│   ├── authController.js    # Controller for signup, login, logout, password reset
+│   ├── userController.js    # Controller for user profile management
+│   ├── transactionController.js # Controller for financial transactions
+│   └── budgetController.js  # Controller for budget-related operations
+├── middlewares/
+│   ├── authMiddleware.js    # Middleware for authenticating JWT tokens
+├── models/
+│   ├── User.js              # User model (for data validation and database interaction)
+│   ├── Transaction.js       # Transaction model
+│   └── Budget.js            # Budget model
+├── routes/
+│   ├── authRoutes.js        # Routes for authentication (signup, login, etc.)
+│   ├── userRoutes.js        # Routes for user profile operations
+│   ├── transactionRoutes.js # Routes for transactions
+│   └── budgetRoutes.js      # Routes for budgets
+├── migrations/
+│   ├── initialSchema.sql    # SQL migration scripts for initial database setup
+├── utils/
+│   ├── jwtUtils.js          # Utilities for handling JWT tokens
+│   └── validation.js        # Helper functions for input validation
+├── app.js                   # Main application file (entry point)
+├── package.json             # Project dependencies and scripts
+└── .env                     # Environment variables
