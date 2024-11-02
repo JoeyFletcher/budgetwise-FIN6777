@@ -11,7 +11,7 @@ Make sure you have the following software installed:
 ## Getting Started
 1. Clone the Repository: Start by cloning the repository: `git clone https://github.com/yourusername/budgetwise.git` and navigate into the directory with `cd budgetwise`.
 
-2. Setting Up the Frontend: Navigate to the frontend directory with `cd frontend`, then install the dependencies using `npm install`. Run the frontend development server with `quasar dev`. By default, the frontend will be available at **http://localhost:8080/**.
+2. Setting Up the Frontend: Navigate to the frontend directory with `cd frontend`, then install the dependencies using `npm install`. Run the frontend development server with `quasar dev`. By default, the frontend will be available at **http://localhost:9000/**.
 
 3. Setting Up the Backend: Navigate to the backend directory with `cd ../backend`, install the dependencies using `npm install`. Create a `.env` file in the backend directory and add the following content: `PORT=5000`. Run the backend development server with `npm run dev`. By default, the backend will be available at **http://localhost:5000/**.
 
@@ -39,7 +39,7 @@ Make sure you have the following software installed:
 - Start server for production: `npm start`
 
 ## Troubleshooting
-- **Ports in Use**: Ensure that **port 8080** (frontend) and **port 5000** (backend) are available.
+- **Ports in Use**: Ensure that **port 9000** (frontend) and **port 5000** (backend) are available.
 - **CORS Issues**: The backend uses **CORS** to allow requests from the frontend. Verify CORS settings in `backend/app.js` if needed.
 - **Frontend Failing to Connect to Backend**: Make sure the backend server is running on **http://localhost:5000/** and that the frontend is configured to connect to this URL.
 
