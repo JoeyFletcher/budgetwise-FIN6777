@@ -55,6 +55,11 @@ export default {
   height: 100%;
   background-attachment: fixed;
   padding: 0 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
 }
 
 /* Navigation Buttons in Welcome Section */
@@ -86,21 +91,23 @@ export default {
 /* Welcome Section */
 .welcome-section {
   text-align: center;
-  padding: 100px 20px 60px;
+  padding: 50px 20px;
   background: rgba(0, 0, 0, 0.75);
   border-radius: 16px;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  width: calc(100% - 40px);
+  max-width: 1200px;
 }
 
 .welcome-content h1 {
-  font-size: 4rem;
+  font-size: 4.5rem;
   color: #00e5ff;
   margin-bottom: 20px;
 }
 
 .welcome-content p {
-  font-size: 1.6rem;
+  font-size: 1.8rem;
   color: #e0e0e0;
 }
 
@@ -110,13 +117,16 @@ export default {
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 30px;
-  padding: 40px 20px;
+  padding: 40px;
+  width: calc(100% - 40px);
+  max-width: 1200px;
+  box-sizing: border-box;
 }
 
 .feature-card {
   flex: 1;
-  min-width: 250px;
-  max-width: 300px;
+  min-width: 280px;
+  max-width: 400px;
   padding: 30px;
   background-color: rgba(255, 255, 255, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.3);
@@ -132,25 +142,25 @@ export default {
 }
 
 .feature-card h3 {
-  font-size: 1.8rem;
+  font-size: 2rem;
   color: #00e5ff;
   margin-bottom: 15px;
 }
 
 .feature-card p {
   color: #e0e0e0;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
 }
 
 /* Footer Section */
 .footer {
   text-align: center;
-  margin-top: 60px;
   padding: 20px;
   background-color: rgba(0, 0, 0, 0.85);
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   width: calc(100% - 40px);
+  max-width: 1200px;
   margin: 20px auto;
 }
 
