@@ -25,3 +25,40 @@ budgetwise-backend/
 ├── app.js                   # Main application file (entry point)
 ├── package.json             # Project dependencies and scripts
 └── .env                     # Environment variables
+
+
+config/
+
+dbConfig.js: Manages database configurations for SQLite (development) and PostgreSQL (production). This file centralizes the database connection logic, making it easier to switch between SQLite and PostgreSQL.
+controllers/
+
+authController.js: Handles user authentication, including signup, login, logout, and password reset.
+userController.js: Manages user profile-related operations, such as updating personal information.
+transactionController.js: Handles CRUD operations for financial transactions.
+budgetController.js: Manages user budget-related operations like creating, updating, and deleting budgets.
+middlewares/
+
+authMiddleware.js: Middleware for authenticating JWT tokens. This is used to protect routes that require users to be logged in.
+models/
+
+User.js: Defines the User model, including fields like username, email, password_hash, etc., and methods for database interaction.
+Transaction.js: Defines the Transaction model to interact with the transactions table.
+Budget.js: Defines the Budget model to interact with the budgets table.
+routes/
+
+authRoutes.js: Defines all routes related to authentication (e.g., /api/signup, /api/login).
+userRoutes.js: Defines routes for managing user profiles (e.g., /api/user/profile).
+transactionRoutes.js: Defines routes for managing financial transactions (e.g., /api/transactions).
+budgetRoutes.js: Defines routes for managing budgets (e.g., /api/budgets).
+migrations/
+
+initialSchema.sql: Contains SQL scripts to set up initial database tables (users, transactions, budgets). This is especially useful when migrating to PostgreSQL.
+utils/
+
+jwtUtils.js: Contains utility functions for generating and verifying JWT tokens.
+validation.js: Contains helper functions for input validation, e.g., validating email format, required fields, etc.
+Root Files
+
+app.js: The main application file that ties everything together. It initializes Express, configures middleware, connects routes, and starts the server.
+package.json: Defines project dependencies and scripts.
+.env: Stores environment variables (e.g., secret keys, database connection strings). We will use dotenv to read these values.

@@ -1,24 +1,22 @@
-require('dotenv').config(); // Load environment variables
+// app.js
+
+require('dotenv').config();
 const express = require('express');
+const bodyParser = require('body-parser');
 const cors = require('cors');
+const authRoutes = require('./routes/authRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
-app.use(cors()); // Enable CORS
-app.use(express.json()); // Parse JSON bodies
+// Middleware setup
+app.use(bodyParser.json());
+app.use(cors());
 
-// Basic Route
-app.get('/', (req, res) => {
-  res.send('Welcome to Budgetwise Backend!');
-});
+// Routes
+app.use('/api/auth', authRoutes);
 
-// User Routes Placeholder
-const userRoutes = require('./routes/userRoutes');
-app.use('/api/users', userRoutes);
-
-// Start the Server
+// Start Server
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
