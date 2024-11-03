@@ -3,6 +3,14 @@
     <div class="link-bank-container">
       <h2>Link Your Bank Account</h2>
       <button @click="generateLinkToken" class="link-bank-button">Connect Your Bank Account</button>
+      <div v-if="accounts.length > 0" class="linked-accounts">
+        <h3>Linked Accounts</h3>
+        <ul>
+          <li v-for="account in accounts" :key="account.account_id">
+            <strong>{{ account.name }}</strong> - {{ account.subtype }} - Balance: {{ account.balances.current }} USD
+          </li>
+        </ul>
+      </div>
     </div>
   </section>
 </template>
@@ -15,6 +23,7 @@ export default {
   name: 'LinkBankSection',
   setup() {
     const linkToken = ref(null);
+    const accounts = ref([]);
 
     const generateLinkToken = async () => {
       try {
@@ -50,8 +59,20 @@ export default {
         const response = await api.post('/plaid/exchange/public_token', { public_token: publicToken });
         localStorage.setItem('access_token', response.data.access_token);
         console.log('Successfully exchanged public token and saved access token.');
+        fetchLinkedAccounts(response.data.access_token);
       } catch (error) {
         console.error('Error exchanging public token:', error);
+      }
+    };
+
+    const fetchLinkedAccounts = async (accessToken) => {
+      try {
+        const response = await api.get('/plaid/accounts', {
+          params: { access_token: accessToken },
+        });
+        accounts.value = response.data.accounts;
+      } catch (error) {
+        console.error('Error fetching linked accounts:', error);
       }
     };
 
@@ -64,6 +85,7 @@ export default {
 
     return {
       generateLinkToken,
+      accounts,
     };
   },
 };
@@ -99,5 +121,27 @@ export default {
 
 .link-bank-button:hover {
   background-color: #0056b3;
+}
+
+.linked-accounts {
+  margin-top: 20px;
+  text-align: left;
+}
+
+.linked-accounts h3 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.linked-accounts ul {
+  list-style: none;
+  padding: 0;
+}
+
+.linked-accounts li {
+  font-size: 1.1rem;
+  margin: 10px 0;
+  color: #333;
 }
 </style>
