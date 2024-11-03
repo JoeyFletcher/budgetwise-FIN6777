@@ -8,6 +8,7 @@ const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const authenticate = require('./middleware/authMiddleware'); // Import the auth middleware
 const transactionRoutes = require('./routes/transactionRoutes');
+const plaidRoutes = require('./routes/plaidRoutes');
 
 
 const app = express();
@@ -21,6 +22,7 @@ app.use(cors({ origin: 'http://localhost:9000', optionsSuccessStatus: 200 }));
 app.use('/api/auth', authRoutes);
 app.use('/api/user', authenticate, userRoutes); // Protect the user routes with the middleware
 app.use('/api/transactions', transactionRoutes);
+app.use('/api/plaid', plaidRoutes);
 
 // Start Server
 app.listen(PORT, () => {
