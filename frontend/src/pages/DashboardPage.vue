@@ -1,14 +1,10 @@
 <template>
   <div v-if="isAuthenticated" :class="['dashboard-layout', isLightMode ? 'light-mode' : 'dark-mode']">
-    <DashboardSidebar />
+    <DashboardSidebar :userData="userData" @option-selected="updateMainContent" />
     <div class="dashboard-content">
       <DashboardHeader :userData="userData" :isLightMode="isLightMode" @sign-out="signOut" @toggle-theme="toggleTheme" />
       <main class="dashboard-main">
-        <p>Your financial overview:</p>
-        <div v-if="userData">
-          <p>Welcome, {{ userData.username }}!</p>
-          <p>Your balance: {{ userData.balance }}</p>
-        </div>
+        <component :is="currentSectionComponent" />
       </main>
     </div>
   </div>
@@ -21,12 +17,20 @@
 import api from '../api';
 import DashboardHeader from '../components/dashboard/DashboardHeader.vue';
 import DashboardSidebar from '../components/dashboard/DashboardSidebar.vue';
+import SpendingSection from '../components/dashboard/sections/SpendingSection.vue';
+import BudgetingSection from '../components/dashboard/sections/BudgetingSection.vue';
+import LinkBankSection from '../components/dashboard/sections/LinkBankSection.vue';
+import AccountSettingsSection from '../components/dashboard/sections/AccountSettingsSection.vue';
 
 export default {
   name: 'DashboardPage',
   components: {
     DashboardHeader,
     DashboardSidebar,
+    SpendingSection,
+    BudgetingSection,
+    LinkBankSection,
+    AccountSettingsSection,
   },
   data() {
     return {
@@ -34,7 +38,24 @@ export default {
       userData: null,
       loading: true,
       isLightMode: false,
+      currentSection: 'spending', // default section
     };
+  },
+  computed: {
+    currentSectionComponent() {
+      switch (this.currentSection) {
+        case 'spending':
+          return 'SpendingSection';
+        case 'budgeting':
+          return 'BudgetingSection';
+        case 'linkBank':
+          return 'LinkBankSection';
+        case 'accountSettings':
+          return 'AccountSettingsSection';
+        default:
+          return 'SpendingSection';
+      }
+    },
   },
   async created() {
     const tokenFromUrl = this.$route.hash ? this.$route.hash.split('=')[1] : null;
@@ -78,6 +99,10 @@ export default {
     toggleTheme() {
       this.isLightMode = !this.isLightMode;
     },
+    updateMainContent(section) {
+      // Update the current section with the selection from the sidebar
+      this.currentSection = section;
+    },
   },
 };
 </script>
@@ -91,7 +116,6 @@ export default {
   font-family: 'Arial, sans-serif';
   background-size: cover;
   background-position: center;
-  filter: .2; 
 }
 
 .light-mode {
