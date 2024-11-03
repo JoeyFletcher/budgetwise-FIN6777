@@ -30,33 +30,47 @@ const signup = (req, res) => {
 };
 
 const login = (req, res) => {
+  console.log('Login request received with:', req.body);
   const { usernameOrEmail, password } = req.body;
 
   if (!usernameOrEmail || !password) {
+    console.log('Missing fields: usernameOrEmail or password');
     return res.status(400).json({ error: 'Username/Email and password are required.' });
   }
 
   User.findUserByUsernameOrEmail(usernameOrEmail, (err, user) => {
     if (err) {
+      console.log('Database error:', err);
       return res.status(500).json({ error: 'Database error.' });
     }
 
     if (!user) {
+      console.log('User not found with:', usernameOrEmail);
       return res.status(404).json({ error: 'User not found.' });
     }
 
     bcrypt.compare(password, user.password, (err, isMatch) => {
       if (err) {
+        console.log('Error comparing passwords:', err);
         return res.status(500).json({ error: 'Error comparing passwords.' });
       }
 
       if (!isMatch) {
+        console.log('Password mismatch for user:', usernameOrEmail);
         return res.status(401).json({ error: 'Invalid credentials.' });
       }
 
+      console.log('User authenticated successfully');
       // Generate JWT Token
       const token = jwt.sign({ userId: user.user_id, username: user.username }, secretKey, { expiresIn: '1h' });
-      res.status(200).json({ message: 'Login successful', token });
+
+      console.log('Sending response:', {
+        success: true,
+        message: 'Login successful',
+        token
+      });
+
+      res.status(200).json({ success: true, message: 'Login successful', token });
     });
   });
 };

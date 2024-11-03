@@ -1,24 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const userController = require('../controllers/userController');
+const authenticate = require('../middleware/authMiddleware');
 
-// @route   GET /api/users
-// @desc    Get all users (Placeholder)
-router.get('/', (req, res) => {
-  res.json({ message: 'Get all users (Placeholder)' });
-});
-
-// @route   POST /api/users/signup
-// @desc    Register a new user (Placeholder)
-router.post('/signup', (req, res) => {
-  const { email, password } = req.body;
-  res.json({ message: `User signed up with email: ${email}` });
-});
-
-// @route   POST /api/users/login
-// @desc    Authenticate a user (Placeholder)
-router.post('/login', (req, res) => {
-  const { email, password } = req.body;
-  res.json({ message: `User login for email: ${email}` });
-});
+// Route to get user-specific dashboard data
+router.get('/dashboard', authenticate, userController.getUserDashboard);
 
 module.exports = router;

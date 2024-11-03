@@ -32,6 +32,8 @@
 </template>
 
 <script>
+import api from '../api';
+
 export default {
   name: 'LoginPage',
   data() {
@@ -48,43 +50,55 @@ export default {
       this.usernameOrEmailError = '';
       this.passwordError = '';
 
+      console.log("Login attempt with: ", this.usernameOrEmail);
+
       // Basic frontend validation
       if (!this.usernameOrEmail) {
+        console.log("No username or email provided");
         this.usernameOrEmailError = 'Username or email is required.';
+        return;
       }
 
       if (!this.password) {
+        console.log("No password provided");
         this.passwordError = 'Password is required.';
+        return;
       }
 
-      if (!this.usernameOrEmailError && !this.passwordError) {
-        try {
-          // Placeholder for backend API call
-          // You would replace the URL below with your actual login API endpoint
-          const response = await fetch('https://api.example.com/login', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              usernameOrEmail: this.usernameOrEmail,
-              password: this.password
-            })
-          });
+      try {
+        console.log("Sending login request to backend...");
+        // Send data to the backend for login using Axios instance
+        const response = await api.post('/auth/login', {
+          usernameOrEmail: this.usernameOrEmail,
+          password: this.password
+        });
 
-          const data = await response.json();
+        console.log('Login response:', response.data); // Log the response
 
-          if (response.ok) {
-            console.log('User logged in:', data);
-            // Handle successful login (e.g., save token, redirect to dashboard)
+        // Handle successful login
+        if (response.data.success) {
+          console.log('Successful login. Saving token and redirecting.');
+          localStorage.setItem('token', response.data.token); // Save token to local storage
+          this.$router.push('/dashboard'); // Redirect to dashboard
+        } else {
+          // Handle login errors from the server
+          console.error('Login error from server:', response.data.error);
+          if (response.data.error.includes('Username or email')) {
+            this.usernameOrEmailError = response.data.error;
+          } else if (response.data.error.includes('Password')) {
+            this.passwordError = response.data.error;
           } else {
-            // Handle errors from the server
-            this.usernameOrEmailError = data.message || 'Login failed. Please try again.';
+            alert('Login failed: ' + response.data.error);
           }
-        } catch (error) {
-          console.error('Error during login:', error);
-          this.usernameOrEmailError = 'An error occurred. Please try again later.';
         }
+      } catch (error) {
+        console.error('Error during login:', error);
+        if (error.response) {
+          console.error("Backend returned an error:", error.response.data);
+        } else {
+          console.error("An unknown error occurred:", error);
+        }
+        this.usernameOrEmailError = 'An error occurred. Please try again later.';
       }
     }
   }
