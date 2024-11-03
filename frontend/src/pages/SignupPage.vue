@@ -118,8 +118,16 @@ export default {
           lastName: this.lastName,
           password: this.password
         });
-        alert(response.data.message); // Notify the user on successful signup
-        this.$router.push('/login'); // Redirect to login page
+
+        // Handle successful signup with received token
+        if (response.data.success) {
+          console.log('Signup successful. Saving token and redirecting to dashboard.');
+          localStorage.setItem('token', response.data.token); // Save token to local storage
+          this.$router.push('/dashboard'); // Redirect to dashboard
+        } else {
+          alert('Signup failed: ' + response.data.message);
+        }
+
       } catch (error) {
         if (error.response && error.response.data.error) {
           if (error.response.data.error.includes('Username')) {

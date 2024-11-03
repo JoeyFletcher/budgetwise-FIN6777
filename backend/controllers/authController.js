@@ -17,17 +17,21 @@ const signup = (req, res) => {
       return res.status(500).json({ error: 'Error hashing password.' });
     }
 
-    User.createUser(username, email, firstName, lastName, hashedPassword, (err) => {
+    User.createUser(username, email, firstName, lastName, hashedPassword, (err, userId) => {
       if (err) {
         if (err.message.includes('UNIQUE constraint failed')) {
           return res.status(400).json({ error: 'Username or Email already exists.' });
         }
         return res.status(500).json({ error: 'Database error.' });
       }
-      res.status(201).json({ message: 'User signed up successfully!' });
+
+      // Generate JWT Token upon successful signup
+      const token = jwt.sign({ userId: userId, username: username }, secretKey, { expiresIn: '1h' });
+      res.status(201).json({ success: true, message: 'User signed up successfully!', token });
     });
   });
 };
+
 
 const login = (req, res) => {
   console.log('Login request received with:', req.body);
