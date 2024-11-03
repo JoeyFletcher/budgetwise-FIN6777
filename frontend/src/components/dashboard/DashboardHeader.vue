@@ -43,11 +43,12 @@ export default {
 .dashboard-header {
   background-color: #333;
   color: #fff;
-  padding: 20px;
+  padding: 1.25rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 100px;
+  height: auto;
+  flex-wrap: wrap;
   position: relative;
 }
 
@@ -56,25 +57,30 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  text-align: center;
+  margin-bottom: 1rem;
 }
 
 .welcome-message {
-  font-size: 1.8rem;
+  font-size: 1.5rem;
   margin: 0;
   text-align: center;
 }
 
 .header-buttons {
   display: flex;
-  gap: 15px;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 1rem;
 }
 
 /* Toggle Switch */
 .theme-toggle {
   position: relative;
   display: inline-block;
-  width: 80px;
-  height: 40px;
+  width: 4rem;
+  height: 2rem;
 }
 
 .theme-toggle input {
@@ -99,10 +105,10 @@ export default {
 .slider:before {
   position: absolute;
   content: "";
-  height: 34px;
-  width: 34px;
-  left: 3px;
-  bottom: 3px;
+  height: 1.7rem;
+  width: 1.7rem;
+  left: 0.2rem;
+  bottom: 0.15rem;
   background-color: #fff;
   transition: 0.4s;
   border-radius: 50%;
@@ -113,23 +119,23 @@ input:checked + .slider {
 }
 
 input:checked + .slider:before {
-  transform: translateX(40px);
+  transform: translateX(2rem);
 }
 
 .icon {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   color: #fff;
 }
 
 .sun {
-  left: 8px;
+  left: 0.5rem;
 }
 
 .moon {
-  right: 8px;
+  right: 0.5rem;
 }
 
 /* Button Styles */
@@ -137,13 +143,54 @@ input:checked + .slider:before {
   background-color: #ff4444;
   color: #fff;
   border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
   cursor: pointer;
   transition: background-color 0.3s;
 }
 
 .sign-out-button:hover {
   background-color: #cc0000;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+  .welcome-message {
+    font-size: 1.2rem;
+  }
+
+  .theme-toggle {
+    width: 3rem;
+    height: 1.5rem;
+  }
+
+  .slider:before {
+    height: 1.4rem;
+    width: 1.4rem;
+    left: 0.1rem;
+    bottom: 0.1rem;
+  }
+
+  input:checked + .slider:before {
+    transform: translateX(1.5rem);
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-header {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  .header-buttons {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .sign-out-button {
+    width: 100%;
+    padding: 0.5rem;
+  }
 }
 </style>

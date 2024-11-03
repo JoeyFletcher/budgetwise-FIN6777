@@ -78,7 +78,8 @@ export default {
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css');
 
 .dashboard-sidebar {
-  width: 250px;
+  width: 100%;
+  max-width: 250px;
   background-color: #2c3e50;
   color: #ffffff;
   padding: 20px;
@@ -89,19 +90,19 @@ export default {
   flex-direction: column;
   align-items: center;
   position: relative;
-  overflow: hidden; /* Prevent any overflow */
+  overflow-y: auto; /* Allow vertical scrolling for small screens */
 }
 
 .avatar-section {
   text-align: center;
-  margin-top: 50px; /* Increase this value to move the avatar further down */
+  margin-top: 30px; /* Reduce margin for better fit on smaller screens */
   margin-bottom: 20px;
   position: relative;
 }
 
 .avatar {
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
   cursor: pointer;
   border: 2px solid #ffffff;
@@ -109,14 +110,14 @@ export default {
 
 .avatar-selection {
   position: absolute;
-  top: 120px;
+  top: 100px;
   left: 50%;
   transform: translateX(-50%);
   background-color: #34495e;
-  padding: 10px 20px; /* Adjust padding to make it more rectangular */
+  padding: 10px 15px; /* Adjust padding to make it more compact */
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-  width: 240px; /* Increase the width to accommodate more avatars */
+  width: 200px; /* Adjust width to fit smaller screens */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -124,14 +125,14 @@ export default {
 
 .avatars-list {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* Arrange avatars in 4 columns */
+  grid-template-columns: repeat(3, 1fr); /* Arrange avatars in 3 columns for better responsiveness */
   gap: 10px;
   margin-top: 10px;
 }
 
 .avatar-option {
-  width: 40px; /* Decreased avatar size to fit 4 in a row */
-  height: 40px;
+  width: 35px; /* Adjust avatar size for smaller screens */
+  height: 35px;
   border-radius: 50%;
   cursor: pointer;
   transition: transform 0.2s ease-in-out;
@@ -143,14 +144,14 @@ export default {
 
 .username {
   margin-top: 10px;
-  font-size: 1.5rem;
+  font-size: 1.2rem; /* Reduce font size for better fit on smaller screens */
   font-weight: bold;
   color: #ffffff;
 }
 
 .nav-section {
   width: 100%;
-  margin-top: 50px; /* Space between avatar and nav links */
+  margin-top: 30px; /* Reduce space between avatar and nav links for smaller screens */
   flex-grow: 1;
   display: flex;
   flex-direction: column;
@@ -162,14 +163,14 @@ nav ul {
   list-style: none;
   padding: 0;
   margin: 0; /* Remove default margin */
-  font-size: 1.1rem;
+  font-size: 1rem;
 }
 
 nav ul li {
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   cursor: pointer;
   font-weight: bold;
-  padding: 15px;
+  padding: 10px;
   display: flex;
   align-items: center;
   transition: background-color 0.3s ease, transform 0.3s ease;
@@ -183,7 +184,46 @@ nav ul li:hover {
 }
 
 .icon {
-  margin-right: 15px;
-  font-size: 1.3rem;
+  margin-right: 10px;
+  font-size: 1.2rem;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+  .dashboard-sidebar {
+    width: 100%;
+    max-width: none;
+    height: auto;
+    position: relative;
+  }
+
+  .avatar {
+    width: 70px;
+    height: 70px;
+  }
+
+  .nav-section {
+    align-items: center;
+  }
+
+  nav ul li {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .avatar-section {
+    margin-top: 20px;
+  }
+
+  .username {
+    font-size: 1rem;
+  }
+
+  nav ul li {
+    padding: 8px;
+    margin-bottom: 10px;
+  }
 }
 </style>
