@@ -1,22 +1,15 @@
 <template>
-  <div v-if="isAuthenticated">
-    <div class="dashboard-layout">
-      <nav class="sidebar">
-        <ul>
-          <li><router-link to="/income">Income</router-link></li>
-          <li><router-link to="/analytics">Analytics</router-link></li>
-        </ul>
-      </nav>
-      <div class="dashboard-content">
-        <DashboardHeader :userData="userData" @sign-out="signOut" />
-        <main class="dashboard-main">
-          <p>Your financial overview:</p>
-          <div v-if="userData">
-            <p>Welcome, {{ userData.username }}!</p>
-            <p>Your balance: {{ userData.balance }}</p>
-          </div>
-        </main>
-      </div>
+  <div v-if="isAuthenticated" :class="['dashboard-layout', isLightMode ? 'light-mode' : 'dark-mode']">
+    <DashboardSidebar />
+    <div class="dashboard-content">
+      <DashboardHeader :userData="userData" :isLightMode="isLightMode" @sign-out="signOut" @toggle-theme="toggleTheme" />
+      <main class="dashboard-main">
+        <p>Your financial overview:</p>
+        <div v-if="userData">
+          <p>Welcome, {{ userData.username }}!</p>
+          <p>Your balance: {{ userData.balance }}</p>
+        </div>
+      </main>
     </div>
   </div>
   <div v-else>
@@ -27,17 +20,20 @@
 <script>
 import api from '../api';
 import DashboardHeader from '../components/dashboard/DashboardHeader.vue';
+import DashboardSidebar from '../components/dashboard/DashboardSidebar.vue';
 
 export default {
   name: 'DashboardPage',
   components: {
     DashboardHeader,
+    DashboardSidebar,
   },
   data() {
     return {
       isAuthenticated: false,
       userData: null,
       loading: true,
+      isLightMode: false,
     };
   },
   async created() {
@@ -79,6 +75,9 @@ export default {
       localStorage.removeItem('token');
       this.$router.push('/login');
     },
+    toggleTheme() {
+      this.isLightMode = !this.isLightMode;
+    },
   },
 };
 </script>
@@ -88,6 +87,25 @@ export default {
   display: flex;
   height: 100vh;
   overflow: hidden;
+  color: #ffffff;
+  font-family: 'Arial, sans-serif';
+  background-size: cover;
+  background-position: center;
+  filter: .2; 
+}
+
+.light-mode {
+  background-image: url('/DBLightBG.png');
+  background-size: cover;
+  background-position: center;
+  color: #000000;
+}
+
+.dark-mode {
+  background-image: url('/DBDarkBG.png');
+  background-size: cover;
+  background-position: center;
+  color: #ffffff;
 }
 
 .sidebar {
@@ -98,37 +116,24 @@ export default {
   height: 100vh; /* Make the sidebar stretch the full height */
 }
 
-.sidebar ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-.sidebar li {
-  margin-bottom: 10px;
-}
-
-.sidebar a {
-  color: #fff;
-  text-decoration: none;
-}
-
-.sidebar a:hover {
-  text-decoration: underline;
-}
-
 .dashboard-content {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+  height: 100vh;
 }
 
 .dashboard-header {
   flex: 0 0 auto;
+  background-color: rgba(51, 51, 51, 0.9);
+  padding: 10px;
 }
 
 .dashboard-main {
   flex-grow: 1;
   padding: 20px;
-  background-color: #f5f5f5;
+  background-color: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  overflow-y: auto;
 }
 </style>
