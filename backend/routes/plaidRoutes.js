@@ -47,4 +47,23 @@ router.get('/accounts', async (req, res) => {
   }
 });
 
+// Retrieve Transactions (New)
+router.get('/transactions', async (req, res) => {
+  try {
+    const { access_token, start_date, end_date } = req.query;
+
+    // Plaid requires start and end dates for transactions retrieval
+    const response = await plaidClient.transactionsGet({
+      access_token,
+      start_date: start_date || '2023-01-01', // Replace with dynamic dates as needed
+      end_date: end_date || new Date().toISOString().split('T')[0],
+    });
+
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error retrieving transactions:', error);
+    res.status(500).send('Failed to retrieve transactions');
+  }
+});
+
 module.exports = router;

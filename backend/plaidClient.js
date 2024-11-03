@@ -5,8 +5,8 @@ const configuration = new Configuration({
   basePath: PlaidEnvironments[process.env.PLAID_ENV],
   baseOptions: {
     headers: {
-      'plaid-client-id': process.env.PLAID_CLIENT_ID,
-      'plaid-secret': process.env.PLAID_SECRET,
+      'PLAID-CLIENT-ID': process.env.PLAID_CLIENT_ID,
+      'PLAID-SECRET': process.env.PLAID_SECRET,
     },
   },
 });

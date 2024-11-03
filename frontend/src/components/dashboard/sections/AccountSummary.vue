@@ -1,5 +1,5 @@
 <template>
-  <section class="spending-section">
+  <section class="account-summary-section">
     <div class="overview">
       <h2>Spending Overview</h2>
       <p><strong>Income:</strong> {{ totalIncome }} USD</p>
@@ -23,38 +23,43 @@
 <script>
 import { ref, onMounted } from 'vue';
 import { Chart } from 'chart.js/auto';
-import { getTransactions } from '../../../api';
+import { getPlaidTransactions } from '../../../api';
 
 export default {
-  name: 'SpendingSection',
-  props: {
-    userId: {
-      type: Number,
-      default: 2, // Fallback for testing
-    },
-  },
-  setup(props) {
+  name: 'AccountSummary',
+  setup() {
     const totalIncome = ref(0);
     const totalExpenses = ref(0);
     const netBalance = ref(0);
     const categorySpending = ref({});
 
-    const fetchTransactions = async () => {
+    const fetchTransactionsFromPlaid = async () => {
       try {
-        const response = await getTransactions(props.userId);
-        console.log('Fetched Transactions:', response.data); // Log fetched transactions
-        const transactions = response.data;
+        // Assuming access_token is stored in local storage after linking account
+        const accessToken = localStorage.getItem('access_token');
+        if (!accessToken) {
+          console.error('No access token found. Please link your bank account.');
+          return;
+        }
+
+        // Fetching the transactions from Plaid using start and end dates
+        const response = await getPlaidTransactions(accessToken, '2023-01-01', new Date().toISOString().split('T')[0]);
+        console.log('Fetched Transactions:', response.data);
+
+        const transactions = response.data.transactions;
 
         let income = 0;
         let expenses = 0;
         const categories = {};
 
         transactions.forEach((transaction) => {
-          if (transaction.transaction_type === 'income') {
+          if (transaction.amount > 0) {
             income += parseFloat(transaction.amount);
-          } else if (transaction.transaction_type === 'expense') {
-            expenses += parseFloat(transaction.amount);
-            categories[transaction.category] = (categories[transaction.category] || 0) + parseFloat(transaction.amount);
+          } else {
+            const expense = Math.abs(parseFloat(transaction.amount));
+            expenses += expense;
+            const category = transaction.category[0] || 'Other';
+            categories[category] = (categories[category] || 0) + expense;
           }
         });
 
@@ -111,21 +116,21 @@ export default {
     };
 
     onMounted(() => {
-      fetchTransactions();
+      fetchTransactionsFromPlaid();
     });
 
     return {
       totalIncome,
       totalExpenses,
       netBalance,
-      fetchTransactions,
+      fetchTransactionsFromPlaid,
     };
   },
 };
 </script>
 
 <style scoped>
-.spending-section {
+.account-summary-section {
   padding: 20px;
   background-color: #f5f5f5;
   border-radius: 10px;

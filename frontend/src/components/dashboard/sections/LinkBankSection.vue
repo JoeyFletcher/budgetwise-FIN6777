@@ -47,8 +47,9 @@ export default {
 
     const exchangePublicToken = async (publicToken) => {
       try {
-        await api.post('/plaid/exchange/public_token', { public_token: publicToken });
-        console.log('Successfully exchanged public token.');
+        const response = await api.post('/plaid/exchange/public_token', { public_token: publicToken });
+        localStorage.setItem('access_token', response.data.access_token);
+        console.log('Successfully exchanged public token and saved access token.');
       } catch (error) {
         console.error('Error exchanging public token:', error);
       }

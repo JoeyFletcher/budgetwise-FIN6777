@@ -18,8 +18,8 @@
     </div>
     <nav class="nav-section">
       <ul>
-        <li @click="selectOption('spending')">
-          <i class="fas fa-wallet icon"></i> Spending
+        <li @click="selectOption('accountSummary')">
+          <i class="fas fa-wallet icon"></i> Account Summary
         </li>
         <li @click="selectOption('budgeting')">
           <i class="fas fa-chart-line icon"></i> Budgeting

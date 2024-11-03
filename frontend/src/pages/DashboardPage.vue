@@ -17,20 +17,20 @@
 import api from '../api';
 import DashboardHeader from '../components/dashboard/DashboardHeader.vue';
 import DashboardSidebar from '../components/dashboard/DashboardSidebar.vue';
-import SpendingSection from '../components/dashboard/sections/SpendingSection.vue';
 import BudgetingSection from '../components/dashboard/sections/BudgetingSection.vue';
 import LinkBankSection from '../components/dashboard/sections/LinkBankSection.vue';
 import AccountSettingsSection from '../components/dashboard/sections/AccountSettingsSection.vue';
+import AccountSummary from '../components/dashboard/sections/AccountSummary.vue';
 
 export default {
   name: 'DashboardPage',
   components: {
     DashboardHeader,
     DashboardSidebar,
-    SpendingSection,
     BudgetingSection,
     LinkBankSection,
     AccountSettingsSection,
+    AccountSummary,
   },
   data() {
     return {
@@ -38,22 +38,22 @@ export default {
       userData: null,
       loading: true,
       isLightMode: false,
-      currentSection: 'spending', // default section
+      currentSection: 'accountSummary', // default section
     };
   },
   computed: {
     currentSectionComponent() {
       switch (this.currentSection) {
-        case 'spending':
-          return 'SpendingSection';
         case 'budgeting':
           return 'BudgetingSection';
         case 'linkBank':
           return 'LinkBankSection';
         case 'accountSettings':
           return 'AccountSettingsSection';
+        case 'accountSummary':
+          return 'AccountSummary';
         default:
-          return 'SpendingSection';
+          return 'AccountSummary';
       }
     },
   },
