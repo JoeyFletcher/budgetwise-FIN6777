@@ -26,12 +26,15 @@ const signup = (req, res) => {
       }
 
       // Generate JWT Token upon successful signup
-      const token = jwt.sign({ userId: userId, username: username }, secretKey, { expiresIn: '1h' });
+      const token = jwt.sign(
+        { userId: userId, username: username, first_name: firstName },
+        secretKey,
+        { expiresIn: '1h' }
+      );
       res.status(201).json({ success: true, message: 'User signed up successfully!', token });
     });
   });
 };
-
 
 const login = (req, res) => {
   console.log('Login request received with:', req.body);
@@ -65,13 +68,17 @@ const login = (req, res) => {
       }
 
       console.log('User authenticated successfully');
-      // Generate JWT Token
-      const token = jwt.sign({ userId: user.user_id, username: user.username }, secretKey, { expiresIn: '1h' });
+      // Generate JWT Token, include first_name in the payload
+      const token = jwt.sign(
+        { userId: user.user_id, username: user.username, first_name: user.first_name },
+        secretKey,
+        { expiresIn: '1h' }
+      );
 
       console.log('Sending response:', {
         success: true,
         message: 'Login successful',
-        token
+        token,
       });
 
       res.status(200).json({ success: true, message: 'Login successful', token });

@@ -79,7 +79,8 @@ export default {
         if (response.data.success) {
           console.log('Successful login. Saving token and redirecting.');
           localStorage.setItem('token', response.data.token); // Save token to local storage
-          this.$router.push('/dashboard'); // Redirect to dashboard
+          const token = response.data.token;
+          this.$router.push({ path: '/dashboard', hash: `#token=${token}` }); // Redirect with token in URL fragment
         } else {
           // Handle login errors from the server
           console.error('Login error from server:', response.data.error);
