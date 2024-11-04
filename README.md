@@ -56,6 +56,9 @@ in sequence in your terminal. This will load the initial database schema and dat
 - **Frontend Failing to Connect to Backend**: Make sure the backend server is running on **http://localhost:5000/** and that the frontend is configured to connect to this URL.
 - **Docker issues** Docker Postgres container uses postgres default port 5432, with container host url as 0.0.0.0. full connection string _0.0.0.0:5432_
 
+## Env Setup
+- Create `.env` file in backend directory
+- Use `env.example` for list of environment variables
 
 ## Contribution Guidelines
 1. **Clone Repository to your local**.

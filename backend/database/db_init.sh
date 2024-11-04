@@ -3,6 +3,8 @@
 docker exec -it backend_db psql -U main-system -d budget_app_db -f ./schemas/budget_buckets_schema.sql
 docker exec -it backend_db psql -U main-system -d budget_app_db -f ./schemas/client_transactions_schema.sql
 docker exec -it backend_db psql -U main-system -d budget_app_db -f ./schemas/mcc_codes_schema.sql
+docker exec -it backend_db psql -U main-system -d budget_app_db -f ./schemas/users_schema.sql
+
 
 docker exec -it backend_db psql -U main-system -d budget_app_db -c "
 COPY budget_buckets(budget_bucket_code, expense_type)
