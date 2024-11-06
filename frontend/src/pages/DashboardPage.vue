@@ -17,20 +17,20 @@
 import api from '../api';
 import DashboardHeader from '../components/dashboard/DashboardHeader.vue';
 import DashboardSidebar from '../components/dashboard/DashboardSidebar.vue';
-import SpendingSection from '../components/dashboard/sections/SpendingSection.vue';
 import BudgetingSection from '../components/dashboard/sections/BudgetingSection.vue';
 import LinkBankSection from '../components/dashboard/sections/LinkBankSection.vue';
 import AccountSettingsSection from '../components/dashboard/sections/AccountSettingsSection.vue';
+import AccountSummary from '../components/dashboard/sections/AccountSummary.vue';
 
 export default {
   name: 'DashboardPage',
   components: {
     DashboardHeader,
     DashboardSidebar,
-    SpendingSection,
     BudgetingSection,
     LinkBankSection,
     AccountSettingsSection,
+    AccountSummary,
   },
   data() {
     return {
@@ -38,22 +38,22 @@ export default {
       userData: null,
       loading: true,
       isLightMode: false,
-      currentSection: 'spending', // default section
+      currentSection: 'accountSummary', // default section
     };
   },
   computed: {
     currentSectionComponent() {
       switch (this.currentSection) {
-        case 'spending':
-          return 'SpendingSection';
         case 'budgeting':
           return 'BudgetingSection';
         case 'linkBank':
           return 'LinkBankSection';
         case 'accountSettings':
           return 'AccountSettingsSection';
+        case 'accountSummary':
+          return 'AccountSummary';
         default:
-          return 'SpendingSection';
+          return 'AccountSummary';
       }
     },
   },
@@ -110,7 +110,8 @@ export default {
 <style scoped>
 .dashboard-layout {
   display: flex;
-  height: 100vh;
+  flex-direction: column; /* Default to column for mobile view */
+  min-height: 100vh;
   overflow: hidden;
   color: #ffffff;
   font-family: 'Arial, sans-serif';
@@ -132,32 +133,74 @@ export default {
   color: #ffffff;
 }
 
-.sidebar {
-  width: 200px;
-  background-color: #2a3f54;
-  color: #fff;
-  padding: 20px;
-  height: 100vh; /* Make the sidebar stretch the full height */
-}
-
 .dashboard-content {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100%;
+  width: 100%;
 }
 
 .dashboard-header {
   flex: 0 0 auto;
   background-color: rgba(51, 51, 51, 0.9);
-  padding: 10px;
+  padding: 1rem;
 }
 
 .dashboard-main {
   flex-grow: 1;
-  padding: 20px;
+  padding: 1.25rem;
   background-color: rgba(0, 0, 0, 0.3);
   color: #fff;
   overflow-y: auto;
+}
+
+/* Sidebar styles */
+.sidebar {
+  width: 15rem;
+  background-color: #2a3f54;
+  color: #fff;
+  padding: 1.25rem;
+  height: 100%; /* Adjust to fit viewport height */
+}
+
+/* Media Queries for Responsiveness */
+@media (min-width: 768px) {
+  .dashboard-layout {
+    flex-direction: row; /* Change to row for larger screens */
+  }
+
+  .sidebar {
+    width: 20%; /* Scale sidebar to 20% of the container on larger screens */
+    min-width: 12rem; /* Minimum width to maintain usability */
+  }
+
+  .dashboard-content {
+    flex-grow: 1;
+    width: 80%; /* Remaining space for content */
+  }
+}
+
+@media (max-width: 767px) {
+  .sidebar {
+    width: 100%;
+    height: auto; /* Make sidebar fit content on smaller screens */
+    padding: 0.625rem;
+    order: -1; /* Move sidebar to the top on small screens */
+  }
+
+  .dashboard-main {
+    padding: 0.625rem; /* Reduce padding for smaller screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-header {
+    padding: 0.3125rem;
+  }
+
+  .dashboard-main {
+    padding: 0.3125rem;
+  }
 }
 </style>
