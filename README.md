@@ -7,7 +7,8 @@ Make sure you have the following software installed:
 - **Node.js** (version >= 14.x) - [Download Node.js here](https://nodejs.org/)
 - **npm** (comes with Node.js) or **Yarn** for managing dependencies
 - **Git** for version control
-
+- **Docker** for postgres db
+- 
 ## Getting Started
 1. Clone the Repository: Start by cloning the repository: `git clone https://github.com/yourusername/budgetwise.git` and navigate into the directory with `cd budgetwise`.
 
@@ -35,18 +36,38 @@ Make sure you have the following software installed:
 - Build for production: `quasar build`
 ### Backend
 - Install dependencies: `npm install`
+- In the backend directory run `docker compose up -d` to start database
 - Run development server: `npm run dev`
 - Start server for production: `npm start`
+- 
+## Additional Commands
+- To view if docker postgres container is running or any additional containers, use command `docker ps`
+- To stop postgres db from running when using docker, in the backend directory run command `docker compose down`
+
+## Seeding/Initializing Database (You should only do this once)
+- Postgres username / password and database name located in `backend/docker-compose.yml` file under _environment_.
+- After confirming docker postgres container is running, using the above command you can then copy and paste the commands in file `database/db_init.sh`
+in sequence in your terminal. This will load the initial database schema and data.
+- To connect your postgres db client such as **pg admin** or any other compatible client for postgres use connection string `0.0.0.0` with port `5423` and user/pass from `docker-compose.yml` file.
 
 ## Troubleshooting
 - **Ports in Use**: Ensure that **port 9000** (frontend) and **port 5000** (backend) are available.
 - **CORS Issues**: The backend uses **CORS** to allow requests from the frontend. Verify CORS settings in `backend/app.js` if needed.
 - **Frontend Failing to Connect to Backend**: Make sure the backend server is running on **http://localhost:5000/** and that the frontend is configured to connect to this URL.
+- **Docker issues** Docker Postgres container uses postgres default port 5432, with container host url as 0.0.0.0. full connection string _0.0.0.0:5432_
+
+## Env Setup
+- Create `.env` file in backend directory
+- Use `env.example` for list of environment variables
 
 ## Contribution Guidelines
-1. **Fork the repository**.
+1. **Clone Repository to your local**.
 2. **Create a new branch** for your feature: `git checkout -b feature/your-feature-name`.
-3. **Commit your changes**: `git commit -m "Add new feature"`.
-4. **Push to your branch**: `git push origin feature/your-feature-name`.
-5. **Open a Pull Request**.
+3. **Add your changes to stage commit**:  `git add .` _adds all changes_  *OR* `git add <FILENAME>` Adds only the file specified.
+4. **Commit your changes**: `git commit -m "Add new feature"`.
+5. **Push to your branch**: `git push origin feature/your-feature-name`.
+6. **Open a Pull Request**.
 
+## Helpful links (additional information)
+- [Docker Compose Commands](https://devopscycle.com/blog/the-ultimate-docker-compose-cheat-sheet/#download-the-ultimate-docker-compose-cheat-sheet)
+- [Postgres Client](https://www.pgadmin.org/down) _download the version for your computer, macOS ,Windows, Linux_
