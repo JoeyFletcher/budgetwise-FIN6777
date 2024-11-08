@@ -1,8 +1,7 @@
-CREATE TABLE IF NOT EXISTS budget_buckets
-(
-    budget_bucket_code integer not null primary key,
-    expense_type       text
+CREATE TABLE IF NOT EXISTS budget_buckets (
+	budget_bucket_code integer NOT NULL PRIMARY KEY, 
+	expense_type text
 );
 
-alter table budget_buckets
-    owner to "main-system";
+ALTER TABLE budget_buckets
+	OWNER TO "main-system";
