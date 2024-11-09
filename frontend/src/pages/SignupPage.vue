@@ -4,7 +4,7 @@
     <section class="signup-section">
       <div class="signup-content">
         <h1>Sign Up for Budgetwise</h1>
-        <form class="signup-form">
+        <form class="signup-form" @submit.prevent="submitSignup">
           <div class="form-field">
             <label for="username">Username:</label>
             <input type="text" id="username" v-model="username" />
@@ -34,7 +34,17 @@
             <input type="password" id="confirmPassword" v-model="confirmPassword" />
             <span v-if="passwordError" class="error-message">{{ passwordError }}</span>
           </div>
-          <button type="button" @click="submitSignup">Sign Up</button>
+          <div class="form-field">
+            <label for="bank_account">Bank Account Number:</label>
+            <input type="text" id="bank_account" v-model="bankAccount" />
+            <span v-if="bankAccountError" class="error-message">{{ bankAccountError }}</span>
+          </div>
+          <div class="form-field">
+            <label for="routing_number">Routing Number:</label>
+            <input type="text" id="routing_number" v-model="routingNumber" />
+            <span v-if="routingNumberError" class="error-message">{{ routingNumberError }}</span>
+          </div>
+          <button type="submit" :disabled="loading">Sign Up</button>
         </form>
         <p class="login-link">Already have an account? <router-link to="/login">Login here</router-link>.</p>
       </div>
@@ -60,11 +70,16 @@ export default {
       lastName: '',
       password: '',
       confirmPassword: '',
+      bankAccount: '',
+      routingNumber: '',
       usernameError: '',
       emailError: '',
       passwordError: '',
       firstNameError: '',
-      lastNameError: ''
+      lastNameError: '',
+      bankAccountError: '',
+      routingNumberError: '',
+      loading: false,
     };
   },
   methods: {
@@ -75,6 +90,8 @@ export default {
       this.passwordError = '';
       this.firstNameError = '';
       this.lastNameError = '';
+      this.bankAccountError = '';
+      this.routingNumberError = '';
 
       // Basic frontend validation
       const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -108,15 +125,26 @@ export default {
         this.passwordError = 'Passwords do not match.';
         return;
       }
+      if (!this.bankAccount) {
+        this.bankAccountError = 'Bank Account Number is required.';
+        return;
+      }
+      if (!this.routingNumber) {
+        this.routingNumberError = 'Routing Number is required.';
+        return;
+      }
 
+      // Send the data to the backend
+      this.loading = true;
       try {
-        // Send data to the backend
-        const response = await api.post('/auth/signup', {
+        const response = await api.post('/signup', {
           username: this.username,
           email: this.email,
           firstName: this.firstName,
           lastName: this.lastName,
-          password: this.password
+          password: this.password,
+          bank_account: this.bankAccount,
+          routing_number: this.routingNumber
         });
 
         // Handle successful signup with received token
@@ -140,6 +168,8 @@ export default {
         } else {
           alert('An unexpected error occurred.');
         }
+      } finally {
+        this.loading = false;
       }
     }
   }
