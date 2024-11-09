@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api', // Adjust this if your backend is running elsewhere
+  baseURL: 'http://localhost:3001/api', // Adjust this if your backend is running elsewhere
 });
 
 // Fetch transactions by user ID (from your own backend)
