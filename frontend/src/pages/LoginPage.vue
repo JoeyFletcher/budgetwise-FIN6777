@@ -1,9 +1,9 @@
 <template>
-  <div class="login-container" style="background-image: url('/HomePageBG.png');">
+  <div class="login-container" style="background-image: url('/LogoDarkBG.png');">
     <!-- Login Form Section -->
     <section class="login-section">
       <div class="login-content">
-        <h1>Login to Budgetwise</h1>
+        <h1>Login</h1>
         <form class="login-form">
           <div class="form-field">
             <label for="usernameOrEmail">Username or Email:</label>
@@ -138,12 +138,14 @@ export default {
   width: 100%;
   margin: auto;
   flex-grow: 1;
+  margin-top: 250px;
 }
 
 .login-content h1 {
   font-size: 3rem;
-  color: #00e5ff;
+  color: #a03acd;
   margin-bottom: 30px;
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
 .login-form {
@@ -170,7 +172,7 @@ input {
 }
 
 button {
-  background-color: #ff5722;
+  background-color: #a03acd;
   color: #ffffff;
   padding: 15px;
   font-weight: bold;
@@ -182,7 +184,7 @@ button {
 }
 
 button:hover {
-  background-color: #e64a19;
+  background-color: #2e177a;
   transform: scale(1.05);
 }
 
