@@ -5,12 +5,14 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const authRoutes = require('./routes/authRoutes');
-const signupRoutes = require('./routes/signupRoutes')
+const signupRoutes = require('./routes/signupRoutes');
 const userRoutes = require('./routes/userRoutes');
 const transactionRoutes = require('./routes/transactionRoutes');
 const pool = require('./config/postgres_db');
 const transactionWebhookRoutesWithdrawals = require('./routes/transactionWebhookRoutesWithdrawals');
 const transactionWebhookRoutesDeposits = require('./routes/transactionWebhookRoutesDeposits');
+const budgetRoutes = require('./routes/budgetRoutes');
+const totalSpendByTypeRoutes = require('./routes/totalSpendByTypeRoutes');
 
 const authenticate = require('./middleware/authMiddleware'); // Import the auth middleware
 
@@ -24,10 +26,12 @@ app.use(cors({ origin: 'http://localhost:9000', optionsSuccessStatus: 200 }));  
 // Routes
 app.use('/api/auth', authRoutes);    //user login
 app.use('/api/signup', signupRoutes);   //signup
-app.use('/api/transaction',transactionRoutes)   //get transactions from database
+app.use('/api/transaction',transactionRoutes);  //get transactions from database
 app.use('/api/user', authenticate, userRoutes);// Protect the user routes with the middleware
 app.use('/api/webhook/withdrawals', transactionWebhookRoutesWithdrawals);   //webhook received from Mambu with withdrawal transaction data
 app.use('/api/webhook/deposits', transactionWebhookRoutesDeposits);   //webhook received from Mambu with deposit transaction data
+app.use('/api/budget', budgetRoutes);    //get budgets from database
+app.use('/api/totalSpendByType', totalSpendByTypeRoutes);   //get total spend by type from database
 
 // Test Database Connection
 pool.query('SELECT NOW()', (err, res) => {
