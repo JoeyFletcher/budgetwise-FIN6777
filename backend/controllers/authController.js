@@ -46,18 +46,25 @@ const login = async (req, res) => {
       console.log('User authenticated successfully');
       // Generate JWT Token, include bank_account and routing_number in the payload
       const token = jwt.sign(
-          { userId: user.user_id, username: user.username, first_name: user.first_name, bank_account: user.bank_account, routing_number: user.routing_number },
-          secretKey,
-          { expiresIn: '1h' }
+        { userId: user.user_id, username: user.username, first_name: user.first_name, bank_account: user.bank_account, routing_number: user.routing_number },
+        secretKey,
+        { expiresIn: '1h' }
       );
 
       console.log('Sending response:', {
         success: true,
         message: 'Login successful',
         token,
+        bank_account: user.bank_account,
       });
 
-      res.status(200).json({ success: true, message: 'Login successful', token });
+      // Send token and bank_account to frontend
+      res.status(200).json({
+        success: true,
+        message: 'Login successful',
+        token,
+        bank_account: user.bank_account
+      });
     });
   } catch (err) {
     console.log('Database error:', err);
@@ -66,7 +73,6 @@ const login = async (req, res) => {
 };
 
 module.exports = { login };
-
 
 
 

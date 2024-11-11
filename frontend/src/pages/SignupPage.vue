@@ -151,6 +151,7 @@ export default {
         if (response.data.success) {
           console.log('Signup successful. Saving token and redirecting to dashboard.');
           localStorage.setItem('token', response.data.token); // Save token to local storage
+          localStorage.setItem('bankAccount', this.bankAccount); // Save bank account ID to local storage
           this.$router.push('/dashboard'); // Redirect to dashboard
         } else {
           alert('Signup failed: ' + response.data.message);

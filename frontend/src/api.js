@@ -4,10 +4,38 @@ const api = axios.create({
   baseURL: 'http://localhost:3001/api', // Adjust this if your backend is running elsewhere
 });
 
-// Fetch transactions by user ID (from your own backend)
-export const getTransactions = (userId) => {
+// Fetch transactions by account ID (from your own backend)
+export const getTransactions = (accountId) => {
   const token = localStorage.getItem('token'); // Assuming the token is stored in local storage
-  return api.get(`/transactions/${userId}`, {
+  return api.get(`/transactions/${accountId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+// Fetch transaction summary for a specific account ID
+export const getTransactionSummary = (accountId, startDate, endDate) => {
+  const token = localStorage.getItem('token');
+  return api.get(`/transactions/summary/${accountId}`, {
+    params: {
+      startDate,
+      endDate,
+    },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+// Fetch spending by category for a specific account ID
+export const getSpendingByCategory = (accountId, startDate, endDate) => {
+  const token = localStorage.getItem('token');
+  return api.get(`/transactions/spending-by-category/${accountId}`, {
+    params: {
+      startDate,
+      endDate,
+    },
     headers: {
       Authorization: `Bearer ${token}`,
     },

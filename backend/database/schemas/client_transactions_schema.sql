@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS client_transactions (
 	merchant_street text,
 	merchant_zip varchar(10),
 	db_cr varchar(10),
-	account_id varchar(10)
+	bank_account varchar(10)
 );
 
 ALTER TABLE client_transactions
