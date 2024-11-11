@@ -77,10 +77,10 @@ export default {
 
         // Handle successful login
         if (response.data.success) {
-          console.log('Successful login. Saving token and redirecting.');
+          console.log('Successful login. Saving token and account ID, and redirecting.');
           localStorage.setItem('token', response.data.token); // Save token to local storage
-          const token = response.data.token;
-          this.$router.push({ path: '/dashboard', hash: `#token=${token}` }); // Redirect with token in URL fragment
+          localStorage.setItem('bankAccount', response.data.bank_account); // Save bank account ID to local storage
+          this.$router.push('/dashboard'); // Redirect to dashboard
         } else {
           // Handle login errors from the server
           console.error('Login error from server:', response.data.error);
@@ -96,10 +96,11 @@ export default {
         console.error('Error during login:', error);
         if (error.response) {
           console.error("Backend returned an error:", error.response.data);
+          this.usernameOrEmailError = error.response.data.error || 'An error occurred. Please try again later.';
         } else {
           console.error("An unknown error occurred:", error);
+          this.usernameOrEmailError = 'An unknown error occurred. Please try again later.';
         }
-        this.usernameOrEmailError = 'An error occurred. Please try again later.';
       }
     }
   }

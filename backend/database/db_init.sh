@@ -13,7 +13,7 @@ DELIMITER ','
 CSV HEADER;"
 
 docker exec -it backend_db psql -U main-system -d budget_app_db -c "
-COPY client_transactions(transaction_id, transaction_date,mcc_code,detail,amount,merchant_name,merchant_city,merchant_state,merchant_street,merchant_zip,db_cr,account_id)
+COPY client_transactions(transaction_id, transaction_date,mcc_code,detail,amount,merchant_name,merchant_city,merchant_state,merchant_street,merchant_zip,db_cr,bank_account)
 FROM '/seed/client_transactions.csv'
 DELIMITER ','
 CSV HEADER;"
