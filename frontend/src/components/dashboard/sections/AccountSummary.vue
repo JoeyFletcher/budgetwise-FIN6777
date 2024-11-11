@@ -9,11 +9,11 @@
       </div>
     </div>
     <div class="overview-horizontal">
-      <p><strong>Income:</strong> {{ totalIncome.toFixed(2) }} USD</p>
-      <p><strong>Total Expenses:</strong> {{ totalExpenses.toFixed(2) }} USD</p>
-      <p><strong>Net Balance:</strong> {{ netBalance.toFixed(2) }} USD</p>
+      <p><strong>Income:</strong> {{ formatCurrency(totalIncome) }}</p>
+      <p><strong>Total Expenses:</strong> {{ formatCurrency(totalExpenses) }}</p>
+      <p><strong>Net Balance:</strong> {{ formatCurrency(netBalance) }}</p>
     </div>
-    
+
     <div class="spending-container-centered">
       <h3 class="spending-title">Spending by Category</h3>
       <div class="spending-content">
@@ -28,7 +28,7 @@
             <tbody>
               <tr v-for="(amount, category) in categorySpending" :key="category">
                 <td>{{ category }}</td>
-                <td>{{ amount.toFixed(2) }}</td>
+                <td>{{ formatCurrency(amount) }}</td>
               </tr>
             </tbody>
           </table>
@@ -55,16 +55,23 @@ export default {
     const categorySpending = ref({});
     const startDate = ref('');
     const endDate = ref('');
-    const accountId = ref(localStorage.getItem('bankAccount') || ''); // Using the bank account ID stored during signup
+    const bankAccount = ref(localStorage.getItem('bankAccount') || ''); // Using the bank account ID stored during signup
 
     const categoryPieChartRef = ref(null);
     let categoryPieChart = null;
 
+    const formatCurrency = (value) => {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+      }).format(value);
+    };
+
     const fetchTransactions = async () => {
-      // Check if accountId exists and is valid
-      if (!accountId.value) {
+      // Check if bankAccount exists and is valid
+      if (!bankAccount.value) {
         alert('Bank account ID is missing. Please log in again.');
-        console.error('Error: accountId is missing.');
+        console.error('Error: bankAccount is missing.');
         return;
       }
 
@@ -74,15 +81,15 @@ export default {
       }
 
       try {
-        console.log('Account ID:', accountId.value);
+        console.log('Bank Account ID:', bankAccount.value);
         console.log('Fetching transaction summary...');
 
         // Fetch transaction summary
-        const summaryResponse = await getTransactionSummary(accountId.value, startDate.value, endDate.value);
+        const summaryResponse = await getTransactionSummary(bankAccount.value, startDate.value, endDate.value);
         if (summaryResponse.data) {
           totalIncome.value = summaryResponse.data.totalIncome || 0;
           totalExpenses.value = summaryResponse.data.totalExpenses || 0;
-          netBalance.value = summaryResponse.data.netBalance || 0;
+          netBalance.value = totalIncome.value - totalExpenses.value;
         } else {
           console.error('No summary data returned from API.');
           totalIncome.value = 0;
@@ -92,7 +99,7 @@ export default {
 
         console.log('Fetching spending by category...');
         // Fetch spending by category
-        const categoryResponse = await getSpendingByCategory(accountId.value, startDate.value, endDate.value);
+        const categoryResponse = await getSpendingByCategory(bankAccount.value, startDate.value, endDate.value);
         if (categoryResponse.data && categoryResponse.data.categorySpending) {
           categorySpending.value = categoryResponse.data.categorySpending;
           renderCategoryPieChart(categorySpending.value);
@@ -151,7 +158,7 @@ export default {
                   const amount = dataset.data[index];
                   const totalAmount = dataset.data.reduce((a, b) => a + b, 0);
                   const percentage = ((amount / totalAmount) * 100).toFixed(2);
-                  return `${category}: ${amount} USD (${percentage}%)`;
+                  return `${category}: ${formatCurrency(amount)} (${percentage}%)`;
                 }
               }
             }
@@ -161,9 +168,9 @@ export default {
     };
 
     onMounted(() => {
-      // Attempt to set accountId from local storage if not set
-      if (!accountId.value) {
-        accountId.value = localStorage.getItem('bankAccount');
+      // Attempt to set bankAccount from local storage if not set
+      if (!bankAccount.value) {
+        bankAccount.value = localStorage.getItem('bankAccount');
       }
       renderCategoryPieChart(categorySpending.value);
     });
@@ -183,6 +190,7 @@ export default {
       fetchTransactions,
       categorySpending,
       categoryPieChartRef,
+      formatCurrency,
     };
   },
 };

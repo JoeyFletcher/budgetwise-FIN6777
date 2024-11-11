@@ -1,16 +1,16 @@
-//transactionController.js
+// transactionController.js
 const pool = require('../config/postgres_db'); // Import the PostgreSQL connection
 
-// Function to fetch transactions for a specific account ID
+// Function to fetch transactions for a specific bank account
 const getTransactions = async (req, res) => {
-  const accountId = req.params.accountId;
+  const bankAccount = req.params.bankAccount;
 
   try {
     const query = `
       SELECT * FROM client_transactions
       WHERE bank_account = $1;
     `;
-    const { rows } = await pool.query(query, [accountId]);
+    const { rows } = await pool.query(query, [bankAccount]);
 
     if (rows.length === 0) {
       return res.status(404).json({ message: 'No transactions found for this account.' });
@@ -23,44 +23,45 @@ const getTransactions = async (req, res) => {
   }
 };
 
-// Function to fetch transaction summary for a specific account ID
+// Function to fetch transaction summary for a specific bank account
 const getTransactionSummary = async (req, res) => {
-  const accountId = req.params.accountId;
+  const bankAccount = req.params.bankAccount;
   const { startDate, endDate } = req.query;
 
   try {
+    console.log(`Fetching transaction summary for account: ${bankAccount}, from ${startDate} to ${endDate}`);
+
     const query = `
-      SELECT db_cr, SUM(amount) AS total_amount
+      SELECT 
+        SUM(CASE WHEN LOWER(TRIM(db_cr)) = 'deposit' THEN amount ELSE 0 END) AS total_income,
+        SUM(CASE WHEN LOWER(TRIM(db_cr)) = 'withdrawal' THEN amount ELSE 0 END) AS total_expenses
       FROM client_transactions
       WHERE transaction_date BETWEEN $1 AND $2
-      AND bank_account = $3
-      GROUP BY db_cr;
+      AND bank_account = $3;
     `;
-    const { rows } = await pool.query(query, [startDate, endDate, accountId]);
+    const { rows } = await pool.query(query, [startDate, endDate, bankAccount]);
 
-    let totalIncome = 0;
-    let totalExpenses = 0;
+    console.log('Query result:', rows);
 
-    rows.forEach(row => {
-      if (row.db_cr.toLowerCase() === 'credit') {
-        totalIncome += parseFloat(row.total_amount);
-      } else if (row.db_cr.toLowerCase() === 'debit') {
-        totalExpenses += parseFloat(row.total_amount);
-      }
-    });
+    if (rows.length > 0) {
+      const { total_income = 0, total_expenses = 0 } = rows[0];
+      const netBalance = total_income - total_expenses;
 
-    const netBalance = totalIncome - totalExpenses;
+      console.log(`Total Income: ${total_income}, Total Expenses: ${total_expenses}, Net Balance: ${netBalance}`);
 
-    res.status(200).json({ totalIncome, totalExpenses, netBalance });
+      res.status(200).json({ totalIncome: total_income, totalExpenses: total_expenses, netBalance });
+    } else {
+      res.status(404).json({ message: 'No transactions found for this account.' });
+    }
   } catch (error) {
     console.error('Error fetching transaction summary:', error);
     res.status(500).json({ error: 'Server error while fetching transaction summary' });
   }
 };
 
-// Function to fetch spending by category for a specific account ID with both date range and year/month filter support
+// Function to fetch spending by category for a specific bank account with both date range and year/month filter support
 const getSpendingByCategory = async (req, res) => {
-  const accountId = req.params.accountId;
+  const bankAccount = req.params.bankAccount;
   const { startDate, endDate, year, month } = req.query;
 
   try {
@@ -79,7 +80,7 @@ const getSpendingByCategory = async (req, res) => {
         AND ct.bank_account = $3
         GROUP BY bb.expense_type;
       `;
-      params = [year, month, accountId];
+      params = [year, month, bankAccount];
     } else if (startDate && endDate) {
       // If date range is provided, fetch spending for that range
       query = `
@@ -91,7 +92,7 @@ const getSpendingByCategory = async (req, res) => {
         AND ct.bank_account = $3
         GROUP BY bb.expense_type;
       `;
-      params = [startDate, endDate, accountId];
+      params = [startDate, endDate, bankAccount];
     } else {
       return res.status(400).json({ error: 'Either startDate/endDate or year/month must be provided.' });
     }
@@ -120,4 +121,3 @@ module.exports = {
   getTransactionSummary,
   getSpendingByCategory,
 };
-

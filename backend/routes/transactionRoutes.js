@@ -3,13 +3,13 @@ const router = express.Router();
 const authMiddleware = require('../middleware/authMiddleware');
 const { getTransactions, getTransactionSummary, getSpendingByCategory } = require('../controllers/transactionController');
 
-// Get transactions by account ID
-router.get('/:accountId', authMiddleware, getTransactions);
+// Get transactions by bank account
+router.get('/:bankAccount', authMiddleware, getTransactions);
 
-// Get transaction summary by account ID
-router.get('/summary/:accountId', authMiddleware, getTransactionSummary);
+// Get transaction summary by bank account
+router.get('/summary/:bankAccount', authMiddleware, getTransactionSummary);
 
-// Get spending by category for a specific account ID
-router.get('/spending-by-category/:accountId', authMiddleware, getSpendingByCategory);
+// Get spending by category for a specific bank account
+router.get('/spending-by-category/:bankAccount', authMiddleware, getSpendingByCategory);
 
 module.exports = router;
