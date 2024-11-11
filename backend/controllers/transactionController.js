@@ -1,3 +1,4 @@
+//transactionController.js
 const pool = require('../config/postgres_db'); // Import the PostgreSQL connection
 
 // Function to fetch transactions for a specific account ID
@@ -7,7 +8,7 @@ const getTransactions = async (req, res) => {
   try {
     const query = `
       SELECT * FROM client_transactions
-      WHERE account_id = $1;
+      WHERE bank_account = $1;
     `;
     const { rows } = await pool.query(query, [accountId]);
 
@@ -32,7 +33,7 @@ const getTransactionSummary = async (req, res) => {
       SELECT db_cr, SUM(amount) AS total_amount
       FROM client_transactions
       WHERE transaction_date BETWEEN $1 AND $2
-      AND account_id = $3
+      AND bank_account = $3
       GROUP BY db_cr;
     `;
     const { rows } = await pool.query(query, [startDate, endDate, accountId]);
@@ -75,7 +76,7 @@ const getSpendingByCategory = async (req, res) => {
         JOIN budget_buckets bb ON mc.budget_bucket_code = bb.budget_bucket_code
         WHERE TO_CHAR(ct.transaction_date, 'YYYY') = $1
         AND TO_CHAR(ct.transaction_date, 'MM') = $2
-        AND ct.account_id = $3
+        AND ct.bank_account = $3
         GROUP BY bb.expense_type;
       `;
       params = [year, month, accountId];
@@ -87,7 +88,7 @@ const getSpendingByCategory = async (req, res) => {
         JOIN mcc_codes mc ON ct.mcc_code = mc.mcc
         JOIN budget_buckets bb ON mc.budget_bucket_code = bb.budget_bucket_code
         WHERE ct.transaction_date BETWEEN $1 AND $2
-        AND ct.account_id = $3
+        AND ct.bank_account = $3
         GROUP BY bb.expense_type;
       `;
       params = [startDate, endDate, accountId];
@@ -119,3 +120,4 @@ module.exports = {
   getTransactionSummary,
   getSpendingByCategory,
 };
+
