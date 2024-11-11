@@ -16,7 +16,3 @@ CREATE TABLE IF NOT EXISTS client_transactions (
 ALTER TABLE client_transactions
 	OWNER TO "main-system";
 
-ALTER TABLE client_transactions
-	ADD CONSTRAINT fk_mcc_code
-	FOREIGN KEY (mcc_code)
-	REFERENCES mcc_codes (mcc);
