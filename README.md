@@ -71,3 +71,7 @@ in sequence in your terminal. This will load the initial database schema and dat
 ## Helpful links (additional information)
 - [Docker Compose Commands](https://devopscycle.com/blog/the-ultimate-docker-compose-cheat-sheet/#download-the-ultimate-docker-compose-cheat-sheet)
 - [Postgres Client](https://www.pgadmin.org/down) _download the version for your computer, macOS ,Windows, Linux_
+
+## Signup Test Accounts
+1. **Available Test Accounts:** New users can be created using the following test accounts: TIZB840, LTDK154, XNFC445, GZVO155.
+2. **Functionality:** The signup controller handles user registration, retrieves transactions from the core banking system (Mambu), and stores the transactions in the Budgetwise database.

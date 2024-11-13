@@ -1,6 +1,5 @@
 // controllers/signupController.js
-
-const pool = require('../config/postgres_db'); // Import PostgreSQL pool
+const pool = require('../config/postgres_db');  // Import PostgreSQL pool
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const secretKey = process.env.SECRET_KEY;
@@ -8,27 +7,8 @@ const secretKey = process.env.SECRET_KEY;
 const signup = async (req, res) => {
     const { username, email, firstName, lastName, password, bank_account, routing_number } = req.body;
 
-    // Validate if all fields are provided
-    if (!username) {
-        return res.status(400).json({ error: 'Username is required.' });
-    }
-    if (!email) {
-        return res.status(400).json({ error: 'Email is required.' });
-    }
-    if (!firstName) {
-        return res.status(400).json({ error: 'First name is required.' });
-    }
-    if (!lastName) {
-        return res.status(400).json({ error: 'Last name is required.' });
-    }
-    if (!password) {
-        return res.status(400).json({ error: 'Password is required.' });
-    }
-    if (!bank_account) {
-        return res.status(400).json({ error: 'Bank account is required.' });
-    }
-    if (!routing_number) {
-        return res.status(400).json({ error: 'Routing number is required.' });
+    if (!username || !email || !firstName || !lastName || !password || !bank_account || !routing_number) {
+        return res.status(400).json({ error: 'All fields are required.' });
     }
 
     try {
@@ -47,24 +27,17 @@ const signup = async (req, res) => {
 
         // Generate JWT Token upon successful signup
         const token = jwt.sign(
-            {
-                userId: userId,
-                username: username,
-                first_name: firstName,
-                bank_account: bank_account,
-                routing_number: routing_number,
-            },
+            { userId: userId, username: username, first_name: firstName, bank_account, routing_number },
             secretKey,
             { expiresIn: '1h' }
         );
 
-        res.status(201).json({ success: true, message: 'User signed up successfully!', token, bank_account });
+        res.status(201).json({ success: true, message: 'User signed up successfully!', token });
 
     } catch (err) {
-        if (err.code === '23505') { // Handle unique constraint violation (e.g., unique username or email)
+        if (err.code === '23505') {  // Handle unique constraint violation
             return res.status(400).json({ error: 'Username or Email already exists.' });
         }
-        console.error('Database error during signup:', err);
         return res.status(500).json({ error: 'Database error.' });
     }
 };
