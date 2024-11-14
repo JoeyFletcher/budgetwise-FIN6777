@@ -1,10 +1,12 @@
 <template>
-  <div class="home-container" style="background-image: url('/HomePageBG.png');">
+  <div class="home-container" style="background-image: url('/DBDarkBG.png');">
+    <!-- Logo Section -->
+    <div class="logo-container">
+      <img src="/BudgetWise.png" alt="Budgetwise Logo" class="responsive-logo">
+    </div>
     <!-- Welcome Section -->
     <section class="welcome-section">
       <div class="welcome-content">
-        <h1>Welcome to Budgetwise</h1>
-        <p>Take control of your finances and achieve your goals with our intuitive personal finance dashboard.</p>
         <div class="nav-buttons">
           <router-link to="/login" class="button-link">Login</router-link>
           <router-link to="/signup" class="button-link">Sign Up</router-link>
@@ -45,34 +47,48 @@ export default {
 /* General Container */
 .home-container {
   width: 100%;
-  margin: 0;
-  padding: 0;
-  font-family: 'Arial, sans-serif';
+  min-height: 100vh; /* Ensures it doesn't shrink below full height */
+  display: flex;
+  flex-direction: column; /* Arranges elements vertically */
+  justify-content: space-around; /* Distributes space evenly */
+  align-items: center; /* Centers items horizontally */
+  color: #ffffff;
+  box-sizing: border-box;
   background-size: cover;
   background-position: center;
-  color: #ffffff;
-  min-height: 100vh;
-  height: 100%;
   background-attachment: fixed;
-  padding: 0 20px;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
+  }
+
+.logo-container {
+  text-align: center;
+  padding-top: 20px;
+  width: 100%;
+}
+
+.responsive-logo {
+  width: 100%; /* Adjusts based on screen width */
+  max-width: 600px; /* Limits width on larger screens */
+  height: auto;
+}
+
+/* Media Query for Smaller Screens */
+@media (max-width: 768px) {
+  .responsive-logo {
+    max-width: 150px; /* Further reduced size on smaller screens */
+  }
 }
 
 /* Navigation Buttons in Welcome Section */
 .nav-buttons {
   display: inline-flex;
-  gap: 20px;
+  gap: 50px;
   justify-content: center;
   margin-top: 20px;
 }
 
 .button-link {
   padding: 15px 40px;
-  background-color: #ff5722;
+  background-color: #a03acd;
   color: #ffffff;
   text-decoration: none;
   font-weight: bold;
@@ -83,7 +99,7 @@ export default {
 }
 
 .button-link:hover {
-  background-color: #e64a19;
+  background-color: #2e177a;
   box-shadow: 0 12px 20px rgba(0, 0, 0, 0.4);
   transform: translateY(-5px);
 }
@@ -94,22 +110,24 @@ export default {
   padding: 50px 20px;
   background: rgba(0, 0, 0, 0.75);
   border-radius: 16px;
-  margin-bottom: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   width: calc(100% - 40px);
   max-width: 1200px;
 }
 
-.welcome-content h1 {
-  font-size: 4.5rem;
+/* This is not needed as the Welcome to Budgetwise section was removed */
+/* .welcome-content h1 {
+  font-size: 4vw;
   color: #00e5ff;
   margin-bottom: 20px;
 }
 
 .welcome-content p {
-  font-size: 1.8rem;
+  font-size: 1.5vw;
   color: #e0e0e0;
-}
+} */
 
 /* Features Section */
 .features-section {
@@ -128,7 +146,7 @@ export default {
   min-width: 280px;
   max-width: 400px;
   padding: 30px;
-  background-color: rgba(255, 255, 255, 0.15);
+  background-color: rgba(255, 255, 255, 0.575);
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 12px;
   text-align: center;
@@ -143,13 +161,15 @@ export default {
 
 .feature-card h3 {
   font-size: 2rem;
-  color: #00e5ff;
+  color: #a03acd;
   margin-bottom: 15px;
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
 .feature-card p {
-  color: #e0e0e0;
+  color: #080734;
   font-size: 1.2rem;
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
 /* Footer Section */

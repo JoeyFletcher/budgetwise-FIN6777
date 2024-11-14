@@ -1,9 +1,13 @@
 <template>
-  <div class="login-container" style="background-image: url('/HomePageBG.png');">
+  <div class="login-container" style="background-image: url('/DBDarkBG.png');">
+    <!-- Logo Section -->
+    <div class="logo-container">
+      <img src="/BudgetWise.png" alt="Budgetwise Logo" class="responsive-logo">
+    </div>
     <!-- Login Form Section -->
     <section class="login-section">
       <div class="login-content">
-        <h1>Login to Budgetwise</h1>
+        <h1>Login</h1>
         <form class="login-form">
           <div class="form-field">
             <label for="usernameOrEmail">Username or Email:</label>
@@ -108,6 +112,25 @@ export default {
 </script>
 
 <style scoped>
+.logo-container {
+  text-align: center;
+  padding-top: 20px;
+  width: 100%;
+}
+
+.responsive-logo {
+  width: 100%; /* Adjusts based on screen width */
+  max-width: 600px; /* Limits width on larger screens */
+  height: auto;
+}
+
+/* Media Query for Smaller Screens */
+@media (max-width: 768px) {
+  .responsive-logo {
+    max-width: 150px; /* Further reduced size on smaller screens */
+  }
+}
+
 /* General Container */
 .login-container {
   width: 100%;
@@ -139,12 +162,15 @@ export default {
   width: 100%;
   margin: auto;
   flex-grow: 1;
+  margin-top: 5px;
 }
 
 .login-content h1 {
   font-size: 3rem;
-  color: #00e5ff;
-  margin-bottom: 30px;
+  color: #a03acd;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
 .login-form {
@@ -171,7 +197,7 @@ input {
 }
 
 button {
-  background-color: #ff5722;
+  background-color: #a03acd;
   color: #ffffff;
   padding: 15px;
   font-weight: bold;
@@ -183,7 +209,7 @@ button {
 }
 
 button:hover {
-  background-color: #e64a19;
+  background-color: #2e177a;
   transform: scale(1.05);
 }
 
