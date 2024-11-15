@@ -14,7 +14,7 @@ Make sure you have the following software installed:
 
 2. Setting Up the Frontend: Navigate to the frontend directory with `cd frontend`, then install the dependencies using `npm install`. Run the frontend development server with `quasar dev`. By default, the frontend will be available at **http://localhost:9000/**.
 
-3. Setting Up the Backend: Navigate to the backend directory with `cd ../backend`, install the dependencies using `npm install`. Create a `.env` file in the backend directory and add the following content: `PORT=5000`. Run the backend development server with `npm run dev`. By default, the backend will be available at **http://localhost:5000/**.
+3. Setting Up the Backend: Navigate to the backend directory with `cd ../backend`, install the dependencies using `npm install`. Create a `.env` file in the backend directory and add the following content: `PORT=3001`. Run the backend development server with `npm run dev`. By default, the backend will be available at **http://localhost:3001/**.
 
 4. Running the Full Project: To run both the **frontend** and **backend**, open two terminal tabs or windows. In the first terminal, navigate to the `frontend` directory and run `quasar dev`. In the second terminal, navigate to the `backend` directory and run `npm run dev`.
 
@@ -51,9 +51,9 @@ in sequence in your terminal. This will load the initial database schema and dat
 - To connect your postgres db client such as **pg admin** or any other compatible client for postgres use connection string `0.0.0.0` with port `5423` and user/pass from `docker-compose.yml` file.
 
 ## Troubleshooting
-- **Ports in Use**: Ensure that **port 9000** (frontend) and **port 5000** (backend) are available.
+- **Ports in Use**: Ensure that **port 9000** (frontend) and **port 3001** (backend) are available.
 - **CORS Issues**: The backend uses **CORS** to allow requests from the frontend. Verify CORS settings in `backend/app.js` if needed.
-- **Frontend Failing to Connect to Backend**: Make sure the backend server is running on **http://localhost:5000/** and that the frontend is configured to connect to this URL.
+- **Frontend Failing to Connect to Backend**: Make sure the backend server is running on **http://localhost:3001/** and that the frontend is configured to connect to this URL.
 - **Docker issues** Docker Postgres container uses postgres default port 5432, with container host url as 0.0.0.0. full connection string _0.0.0.0:5432_
 
 ## Env Setup
