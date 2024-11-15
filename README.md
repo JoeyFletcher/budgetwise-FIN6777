@@ -48,13 +48,13 @@ Make sure you have the following software installed:
 - Postgres username / password and database name located in `backend/docker-compose.yml` file under _environment_.
 - After confirming docker postgres container is running, using the above command you can then copy and paste the commands in file `database/db_init.sh`
 in sequence in your terminal. This will load the initial database schema and data.
-- To connect your postgres db client such as **pg admin** or any other compatible client for postgres use connection string `0.0.0.0` with port `5423` and user/pass from `docker-compose.yml` file.
+- To connect your postgres db client such as **pg admin** or any other compatible client for postgres use connection string `127.0.0.1` with port `5423` and user/pass from `docker-compose.yml` file.
 
 ## Troubleshooting
 - **Ports in Use**: Ensure that **port 9000** (frontend) and **port 3001** (backend) are available.
 - **CORS Issues**: The backend uses **CORS** to allow requests from the frontend. Verify CORS settings in `backend/app.js` if needed.
 - **Frontend Failing to Connect to Backend**: Make sure the backend server is running on **http://localhost:3001/** and that the frontend is configured to connect to this URL.
-- **Docker issues** Docker Postgres container uses postgres default port 5432, with container host url as 0.0.0.0. full connection string _0.0.0.0:5432_
+- **Docker issues** Docker Postgres container uses postgres default port 5432, with container host url as 127.0.0.1. full connection string _127.0.0.1:5432_
 
 ## Env Setup
 - Create `.env` file in backend directory
