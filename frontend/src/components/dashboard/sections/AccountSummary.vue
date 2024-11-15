@@ -89,7 +89,7 @@ export default {
         if (summaryResponse.data) {
           totalIncome.value = summaryResponse.data.totalIncome || 0;
           totalExpenses.value = summaryResponse.data.totalExpenses || 0;
-          netBalance.value = totalIncome.value - totalExpenses.value;
+          netBalance.value = totalIncome.value - Math.abs(totalExpenses.value);
         } else {
           console.error('No summary data returned from API.');
           totalIncome.value = 0;
