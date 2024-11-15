@@ -1,8 +1,14 @@
 <template>
   <header class="dashboard-header">
+    <!-- Logo Section -->
+    <div class="logo-container">
+      <img src="/BudgetWise.png" alt="Budgetwise Logo" class="responsive-logo">
+    </div>
+    <!-- Welcome Message-->
     <div class="welcome-message-container">
       <h1 class="welcome-message">Welcome to your Budgetwise Dashboard, {{ userData ? userData.first_name : '' }}!</h1>
     </div>
+    <!-- Header Buttons (Theme Toggle and Sign Out) -->
     <div class="header-buttons">
       <label class="theme-toggle">
         <input type="checkbox" :checked="isDarkMode" @change="toggleSwitch" />
@@ -52,6 +58,17 @@ export default {
   position: relative;
 }
 
+.logo-container {
+  flex-shrink: 0;
+  left: 20px;
+  top: 5px;
+}
+
+.responsive-logo {
+  max-width: 400px;
+  height: auto;
+}
+
 .welcome-message-container {
   flex-grow: 1;
   display: flex;
@@ -62,16 +79,23 @@ export default {
 }
 
 .welcome-message {
-  font-size: 1.5rem;
+  font-size: 4vw; /* Font size relative to viewport width */
   margin: 0;
   text-align: center;
+  max-width: 100%;
+  line-height: 1.2; /* Adjusts line height for better readability */
 }
 
+/* Header Buttons */
 .header-buttons {
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-end;  /* Align to the right */
+  align-items: flex-start;    /* Align to the top */
+  position: absolute;
+  right: 20px;
+  top:20px;
   margin-bottom: 1rem;
 }
 
@@ -140,7 +164,7 @@ input:checked + .slider:before {
 
 /* Button Styles */
 .sign-out-button {
-  background-color: #ff4444;
+  background-color: #a03acd;
   color: #fff;
   border: none;
   padding: 0.5rem 1rem;
@@ -150,11 +174,15 @@ input:checked + .slider:before {
 }
 
 .sign-out-button:hover {
-  background-color: #cc0000;
+  background-color: #2e177a;
 }
 
 /* Media Queries for Responsiveness */
 @media (max-width: 768px) {
+  .responsive-logo {
+    max-width: 150px; /* Further reduced size on smaller screens */
+  }
+
   .welcome-message {
     font-size: 1.2rem;
   }
