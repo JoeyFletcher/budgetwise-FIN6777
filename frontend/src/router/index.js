@@ -3,6 +3,7 @@ import HomePage from '../pages/HomePage.vue';
 import LoginPage from '../pages/LoginPage.vue';
 import SignupPage from '../pages/SignupPage.vue';
 import DashboardPage from '../pages/DashboardPage.vue';
+import ForgotPassword from '../pages/ForgotPassword.vue';
 
 const routes = [
   {
@@ -25,6 +26,11 @@ const routes = [
     name: 'DashboardPage',
     component: DashboardPage,
     meta: { requiresAuth: true },
+  },
+  {
+    path: '/forgot-password',
+    name: 'ForgotPassword',
+    component: ForgotPassword,
   },
 ];
 

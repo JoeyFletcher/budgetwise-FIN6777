@@ -8,6 +8,7 @@ const authRoutes = require('./routes/authRoutes');
 const signupRoutes = require('./routes/signupRoutes');
 const userRoutes = require('./routes/userRoutes');
 const transactionRoutes = require('./routes/transactionRoutes'); // Updated import for transaction routes
+const plaidRoutes = require('./routes/plaidRoutes');
 const pool = require('./config/postgres_db');
 const transactionWebhookRoutesWithdrawals = require('./routes/transactionWebhookRoutesWithdrawals');
 const transactionWebhookRoutesDeposits = require('./routes/transactionWebhookRoutesDeposits');
@@ -32,6 +33,7 @@ app.use('/api/webhook/withdrawals', transactionWebhookRoutesWithdrawals);   // W
 app.use('/api/webhook/deposits', transactionWebhookRoutesDeposits);   // Webhook received from Mambu with deposit transaction data
 app.use('/api/budget', budgetRoutes);    // Get budgets from database
 app.use('/api/totalSpendByType', totalSpendByTypeRoutes);   // Get total spend by type from database
+app.use('/api/plaid', plaidRoutes);
 
 // Test Database Connection
 pool.query('SELECT NOW()', (err, res) => {

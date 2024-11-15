@@ -115,7 +115,7 @@ const signup = async (req, res) => {
             const transactionQuery = `
                 INSERT INTO client_transactions
                 (transaction_id, transaction_date, mcc_code, detail, amount, merchant_name,
-                 merchant_city, merchant_state, merchant_street, merchant_zip, db_cr, account_id)
+                 merchant_city, merchant_state, merchant_street, merchant_zip, db_cr, bank_account)
                 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
                 ON CONFLICT (transaction_id) DO NOTHING;
             `;

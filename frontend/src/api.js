@@ -5,9 +5,9 @@ const api = axios.create({
 });
 
 // Fetch transactions by account ID (from your own backend)
-export const getTransactions = (accountId) => {
+export const getTransactions = (bankAccount) => { // Updated to use bankAccount instead of accountId
   const token = localStorage.getItem('token'); // Assuming the token is stored in local storage
-  return api.get(`/transactions/${accountId}`, {
+  return api.get(`/transactions/${bankAccount}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -15,9 +15,9 @@ export const getTransactions = (accountId) => {
 };
 
 // Fetch transaction summary for a specific account ID
-export const getTransactionSummary = (accountId, startDate, endDate) => {
+export const getTransactionSummary = (bankAccount, startDate, endDate) => { // Updated to use bankAccount instead of accountId
   const token = localStorage.getItem('token');
-  return api.get(`/transactions/summary/${accountId}`, {
+  return api.get(`/transactions/summary/${bankAccount}`, {
     params: {
       startDate,
       endDate,
@@ -29,9 +29,9 @@ export const getTransactionSummary = (accountId, startDate, endDate) => {
 };
 
 // Fetch spending by category for a specific account ID
-export const getSpendingByCategory = (accountId, startDate, endDate) => {
+export const getSpendingByCategory = (bankAccount, startDate, endDate) => { // Updated to use bankAccount instead of accountId
   const token = localStorage.getItem('token');
-  return api.get(`/transactions/spending-by-category/${accountId}`, {
+  return api.get(`/transactions/spending-by-category/${bankAccount}`, {
     params: {
       startDate,
       endDate,
@@ -44,28 +44,46 @@ export const getSpendingByCategory = (accountId, startDate, endDate) => {
 
 // Generate Plaid Link Token
 export const generateLinkToken = () => {
-  return api.post('/plaid/link/token');
+  const token = localStorage.getItem('token'); // Added token for authenticated requests
+  return api.post('/plaid/link/token', {}, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 };
 
 // Exchange Public Token for Access Token
 export const exchangePublicToken = (publicToken) => {
-  return api.post('/plaid/exchange/public_token', { public_token: publicToken });
+  const token = localStorage.getItem('token'); // Added token for authenticated requests
+  return api.post('/plaid/exchange/public_token', { public_token: publicToken }, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 };
 
 // Retrieve Accounts from Plaid
 export const getAccounts = (accessToken) => {
+  const token = localStorage.getItem('token'); // Added token for authenticated requests
   return api.get('/plaid/accounts', {
     params: { access_token: accessToken },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   });
 };
 
 // Retrieve Transactions from Plaid (New)
 export const getPlaidTransactions = (accessToken, startDate, endDate) => {
+  const token = localStorage.getItem('token'); // Added token for authenticated requests
   return api.get('/plaid/transactions', {
     params: {
       access_token: accessToken,
       start_date: startDate,
       end_date: endDate,
+    },
+    headers: {
+      Authorization: `Bearer ${token}`,
     },
   });
 };
