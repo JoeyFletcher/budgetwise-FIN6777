@@ -1,9 +1,13 @@
 <template>
-  <div class="signup-container" style="background-image: url('/HomePageBG.png');">
+  <div class="signup-container" style="background-image: url('/DBDarkBG.png');">
+    <!-- Logo Section -->
+    <div class="logo-container">
+      <img src="/BudgetWise.png" alt="Budgetwise Logo" class="responsive-logo">
+    </div>
     <!-- Signup Form Section -->
     <section class="signup-section">
       <div class="signup-content">
-        <h1>Sign Up for Budgetwise</h1>
+        <h1>Sign Up</h1>
         <form class="signup-form" @submit.prevent="submitSignup">
           <div class="form-field">
             <label for="username">Username:</label>
@@ -178,6 +182,25 @@ export default {
 </script>
 
 <style scoped>
+.logo-container {
+  text-align: center;
+  padding-top: 20px;
+  width: 100%;
+}
+
+.responsive-logo {
+  width: 100%; /* Adjusts based on screen width */
+  max-width: 600px; /* Limits width on larger screens */
+  height: auto;
+}
+
+/* Media Query for Smaller Screens */
+@media (max-width: 768px) {
+  .responsive-logo {
+    max-width: 150px; /* Further reduced size on smaller screens */
+  }
+}
+
 /* General Container */
 .signup-container {
   width: 100%;
@@ -201,11 +224,11 @@ export default {
 /* Signup Section */
 .signup-section {
   text-align: center;
-  padding: 20px;
+  padding: 40px;
   background: rgba(0, 0, 0, 0.75);
   border-radius: 16px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  max-width: 500px;
+  max-width: 600px;
   width: 100%;
   margin-top: auto;
   margin-bottom: auto;
@@ -213,15 +236,17 @@ export default {
 }
 
 .signup-content h1 {
-  font-size: 2.5rem;
-  color: #00e5ff;
-  margin-bottom: 20px;
+  font-size: 3rem;
+  color: #a03acd;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
 .signup-form {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 20px;
 }
 
 .form-field {
@@ -236,13 +261,13 @@ label {
 
 input {
   width: 100%;
-  padding: 10px;
+  padding: 15px;
   border: 1px solid #ccc;
   border-radius: 8px;
 }
 
 button {
-  background-color: #ff5722;
+  background-color: #a03acd;
   color: #ffffff;
   padding: 15px;
   font-weight: bold;
@@ -254,7 +279,7 @@ button {
 }
 
 button:hover {
-  background-color: #e64a19;
+  background-color: #2e177a;
   transform: scale(1.05);
 }
 
@@ -267,7 +292,7 @@ button:hover {
 .login-link {
   margin-top: 20px;
   color: #00e5ff;
-  font-size: 1rem;
+  font-size: 1.2rem;
 }
 
 .login-link a {

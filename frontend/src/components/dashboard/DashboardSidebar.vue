@@ -1,5 +1,11 @@
 <template>
-  <aside class="dashboard-sidebar">
+  <aside :class="['dashboard-sidebar', {collapsed: isCollapsed}]"
+  @mouseover="isHovered = true"
+  @mouseleave="isHovered = false">
+    <button class="collapse-btn" @click="toggleSidebar">
+      <i class="fas fa-arrow-right" v-if="isCollapsed"></i>
+      <i class="fas fa-arrow-left" v-if="!isCollapsed"></i>
+    </button>
     <div class="avatar-section">
       <img :src="`/avatars/${selectedAvatar}`" alt="User Avatar" class="avatar" @click="toggleAvatarSelection" />
       <div v-if="showAvatarSelection" class="avatar-selection">
@@ -19,16 +25,20 @@
     <nav class="nav-section">
       <ul>
         <li @click="selectOption('accountSummary')">
-          <i class="fas fa-wallet icon"></i> Account Summary
+          <i class="fas fa-wallet icon"></i>
+          <span v-if="!isCollapsed || isHovered"> Account Summary </span>
         </li>
         <li @click="selectOption('budgeting')">
-          <i class="fas fa-chart-line icon"></i> Budgeting
+          <i class="fas fa-chart-line icon"></i> 
+          <span v-if="!isCollapsed || isHovered"> Budgeting </span>
         </li>
         <li @click="selectOption('linkBank')">
-          <i class="fas fa-university icon"></i> Link Your Bank
+          <i class="fas fa-university icon"></i> 
+          <span v-if="!isCollapsed || isHovered"> Link Other Accounts </span>
         </li>
         <li @click="selectOption('accountSettings')">
-          <i class="fas fa-user-cog icon"></i> Account Settings
+          <i class="fas fa-user-cog icon"></i> 
+          <span v-if="!isCollapsed || isHovered"> Account Settings </span>
         </li>
       </ul>
     </nav>
@@ -46,11 +56,14 @@ export default {
   },
   data() {
     return {
+      isCollapsed: false, // New data property to track sidebar state
+      isHovered: false, // Track hover state for sidebar
       avatars: [
         'girl.png', 'man.png', 'profile 2.png', 'human.png', 'boy.png', 'woman.png', 'profile.png'
       ],
       selectedAvatar: '',
       showAvatarSelection: false,
+      sidebarCollapsed: false, // Track whether the sidebar is collapsed
     };
   },
   created() {
@@ -58,6 +71,9 @@ export default {
     this.selectedAvatar = this.avatars[Math.floor(Math.random() * this.avatars.length)];
   },
   methods: {
+    toggleSidebar() {
+      this.isCollapsed = !this.isCollapsed;
+    },
     toggleAvatarSelection() {
       this.showAvatarSelection = !this.showAvatarSelection;
     },
@@ -91,6 +107,59 @@ export default {
   align-items: center;
   position: relative;
   overflow-y: auto; /* Allow vertical scrolling for small screens */
+}
+
+.dashboard-sidebar.collapsed {
+  max-width: 80px; /* Adjust this value to control collapsed width */
+}
+
+/* Handle the hover effect to show text when collapsed */
+.dashboard-sidebar.collapsed:hover {
+  max-width: 250px; /* Ensure the sidebar expands on hover */
+}
+
+.nav-section li span {
+  display: none; /* Hide text by default */
+}
+
+/* Show text when sidebar is not collapsed or hovered */
+.dashboard-sidebar .nav-section li span {
+  display: inline-block;
+}
+
+/* Show text when the sidebar is collapsed and hovered */
+.dashboard-sidebar.collapsed:hover .nav-section li span {
+  display: inline-block;
+}
+
+.icon {
+  margin-right: 10px;
+  font-size: 1.2rem;
+}
+
+/* Add media queries if necessary */
+@media (max-width: 768px) {
+  /* Hide text when sidebar is collapsed */
+  .dashboard-sidebar .nav-section li span {
+    display: none;
+  }
+  
+  /* Show text when sidebar is collapsed and hovered */
+  .dashboard-sidebar.collapsed:hover .nav-section li span {
+    display: inline-block;
+  }
+}
+
+.collapse-btn {
+  position: absolute;
+  top: 5px; /* Adjust top value to move the button lower or higher */
+  right: 20px; /* Adjust left value to position it horizontally */
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.5rem;
+  cursor: pointer;
+  z-index: 1000; /* Ensure the button appears above other elements */
 }
 
 .avatar-section {
@@ -210,6 +279,15 @@ nav ul li:hover {
     width: 100%;
     text-align: center;
   }
+  /* Hide text when sidebar is collapsed */
+  .dashboard-sidebar .nav-section li span {
+    display: none;
+  }
+
+  /* Adjust icon size for better visual balance */
+  .icon {
+    font-size: 1.5rem;
+  }  
 }
 
 @media (max-width: 480px) {

@@ -120,7 +120,7 @@ export default {
 }
 
 .light-mode {
-  background-image: url('/DBLightBG.png');
+  background-image: url('/DBLightBG_.png');
   background-size: cover;
   background-position: center;
   color: #000000;
