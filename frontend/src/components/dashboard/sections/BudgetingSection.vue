@@ -30,7 +30,7 @@
                 <input type="number" v-model.number="budgetData[category].budgeted" @change="updateBudget(category)" class="budget-input">
               </td>
               <td>{{ formatCurrency(budget.spent) }}</td>
-              <td>{{ formatCurrency(budget.budgeted - budget.spent) }}</td>
+              <td>{{ formatCurrency(budget.budgeted - Math.abs(budget.spent)) }}</td>
             </tr>
           </tbody>
           <tfoot>
