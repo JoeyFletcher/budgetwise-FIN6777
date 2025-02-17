@@ -1,5 +1,3 @@
-// app.js
-
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -14,6 +12,7 @@ const transactionWebhookRoutesWithdrawals = require('./routes/transactionWebhook
 const transactionWebhookRoutesDeposits = require('./routes/transactionWebhookRoutesDeposits');
 const budgetRoutes = require('./routes/budgetRoutes');
 const totalSpendByTypeRoutes = require('./routes/totalSpendByTypeRoutes');
+const alpacaRoutes = require('./routes/alpacaRoutes'); // Added Alpaca trading routes
 
 const authenticate = require('./middleware/authMiddleware'); // Import the auth middleware
 
@@ -34,6 +33,7 @@ app.use('/api/webhook/deposits', transactionWebhookRoutesDeposits);   // Webhook
 app.use('/api/budget', budgetRoutes);    // Get budgets from database
 app.use('/api/totalSpendByType', totalSpendByTypeRoutes);   // Get total spend by type from database
 app.use('/api/plaid', plaidRoutes);
+app.use('/api/alpaca', alpacaRoutes);  // ✅ Alpaca Trading API
 
 // Test Database Connection
 pool.query('SELECT NOW()', (err, res) => {

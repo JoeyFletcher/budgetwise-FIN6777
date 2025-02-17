@@ -1,91 +1,94 @@
 import axios from 'axios';
 
+// Base API instance
 const api = axios.create({
-  baseURL: 'http://localhost:3001/api', // Adjust this if your backend is running elsewhere
+  baseURL: 'http://localhost:3001/api', // Adjust if your backend runs elsewhere
 });
 
-// Fetch transactions by account ID (from your own backend)
-export const getTransactions = (bankAccount) => { // Updated to use bankAccount instead of accountId
-  const token = localStorage.getItem('token'); // Assuming the token is stored in local storage
+// Get auth token from local storage
+const getAuthToken = () => localStorage.getItem('token');
+
+// Transactions API (Bank Transactions)
+export const getTransactions = (bankAccount) => {
   return api.get(`/transactions/${bankAccount}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+    headers: { Authorization: `Bearer ${getAuthToken()}` },
   });
 };
 
-// Fetch transaction summary for a specific account ID
-export const getTransactionSummary = (bankAccount, startDate, endDate) => { // Updated to use bankAccount instead of accountId
-  const token = localStorage.getItem('token');
+export const getTransactionSummary = (bankAccount, startDate, endDate) => {
   return api.get(`/transactions/summary/${bankAccount}`, {
-    params: {
-      startDate,
-      endDate,
-    },
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+    params: { startDate, endDate },
+    headers: { Authorization: `Bearer ${getAuthToken()}` },
   });
 };
 
-// Fetch spending by category for a specific account ID
-export const getSpendingByCategory = (bankAccount, startDate, endDate) => { // Updated to use bankAccount instead of accountId
-  const token = localStorage.getItem('token');
+export const getSpendingByCategory = (bankAccount, startDate, endDate) => {
   return api.get(`/transactions/spending-by-category/${bankAccount}`, {
-    params: {
-      startDate,
-      endDate,
-    },
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+    params: { startDate, endDate },
+    headers: { Authorization: `Bearer ${getAuthToken()}` },
   });
 };
 
-// Generate Plaid Link Token
+// Plaid API (Bank Integration)
 export const generateLinkToken = () => {
-  const token = localStorage.getItem('token'); // Added token for authenticated requests
   return api.post('/plaid/link/token', {}, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+    headers: { Authorization: `Bearer ${getAuthToken()}` },
   });
 };
 
-// Exchange Public Token for Access Token
 export const exchangePublicToken = (publicToken) => {
-  const token = localStorage.getItem('token'); // Added token for authenticated requests
   return api.post('/plaid/exchange/public_token', { public_token: publicToken }, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+    headers: { Authorization: `Bearer ${getAuthToken()}` },
   });
 };
 
-// Retrieve Accounts from Plaid
 export const getAccounts = (accessToken) => {
-  const token = localStorage.getItem('token'); // Added token for authenticated requests
   return api.get('/plaid/accounts', {
     params: { access_token: accessToken },
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+    headers: { Authorization: `Bearer ${getAuthToken()}` },
   });
 };
 
-// Retrieve Transactions from Plaid (New)
 export const getPlaidTransactions = (accessToken, startDate, endDate) => {
-  const token = localStorage.getItem('token'); // Added token for authenticated requests
   return api.get('/plaid/transactions', {
-    params: {
-      access_token: accessToken,
-      start_date: startDate,
-      end_date: endDate,
-    },
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+    params: { access_token: accessToken, start_date: startDate, end_date: endDate },
+    headers: { Authorization: `Bearer ${getAuthToken()}` },
   });
 };
 
+// Alpaca API (Paper Trading & Investments)
+export const getAlpacaAccount = () => {
+  return api.get('/alpaca/account', {
+    headers: { Authorization: `Bearer ${getAuthToken()}` },
+  });
+};
+
+export const getAlpacaPositions = () => {
+  return api.get('/alpaca/positions', {
+    headers: { Authorization: `Bearer ${getAuthToken()}` },
+  });
+};
+
+export const placeAlpacaTrade = (symbol, qty, side) => {
+  return api.post('/alpaca/trade', { symbol, qty, side }, {
+    headers: { Authorization: `Bearer ${getAuthToken()}` },
+  });
+};
+
+// User Authentication
+export const loginUser = (credentials) => {
+  return api.post('/auth/login', credentials);
+};
+
+export const signupUser = (userData) => {
+  return api.post('/signup', userData);
+};
+
+export const getUserDashboard = () => {
+  return api.get('/user/dashboard', {
+    headers: { Authorization: `Bearer ${getAuthToken()}` },
+  });
+};
+
+// Export default API instance
 export default api;

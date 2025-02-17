@@ -21,6 +21,7 @@ import BudgetingSection from '../components/dashboard/sections/BudgetingSection.
 import LinkBankSection from '../components/dashboard/sections/LinkBankSection.vue';
 import AccountSettingsSection from '../components/dashboard/sections/AccountSettingsSection.vue';
 import AccountSummary from '../components/dashboard/sections/AccountSummary.vue';
+import InvestmentsSection from '../components/dashboard/sections/InvestmentsSection.vue'; // ✅ Added Investments Section
 
 export default {
   name: 'DashboardPage',
@@ -31,6 +32,7 @@ export default {
     LinkBankSection,
     AccountSettingsSection,
     AccountSummary,
+    InvestmentsSection, // ✅ Registered Investments Section
   },
   data() {
     return {
@@ -38,7 +40,7 @@ export default {
       userData: null,
       loading: true,
       isLightMode: false,
-      currentSection: 'accountSummary', // default section
+      currentSection: 'accountSummary', // Default section
     };
   },
   computed: {
@@ -50,8 +52,9 @@ export default {
           return 'LinkBankSection';
         case 'accountSettings':
           return 'AccountSettingsSection';
+        case 'investments': // ✅ Added case for investments
+          return 'InvestmentsSection';
         case 'accountSummary':
-          return 'AccountSummary';
         default:
           return 'AccountSummary';
       }
@@ -100,7 +103,7 @@ export default {
       this.isLightMode = !this.isLightMode;
     },
     updateMainContent(section) {
-      // Update the current section with the selection from the sidebar
+      // ✅ Ensures sidebar can switch to investments
       this.currentSection = section;
     },
   },
