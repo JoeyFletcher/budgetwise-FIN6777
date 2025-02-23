@@ -81,9 +81,8 @@ export default {
 
         // Handle successful login
         if (response.data.success) {
-          console.log('Successful login. Saving token and account ID, and redirecting.');
+          console.log('Successful login. Saving token and redirecting.');
           localStorage.setItem('token', response.data.token); // Save token to local storage
-          localStorage.setItem('bankAccount', response.data.bank_account); // Save bank account ID to local storage
           this.$router.push('/dashboard'); // Redirect to dashboard
         } else {
           // Handle login errors from the server
