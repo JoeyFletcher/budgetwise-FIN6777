@@ -4,7 +4,7 @@
     <div class="dashboard-content">
       <DashboardHeader :userData="userData" :isLightMode="isLightMode" @sign-out="signOut" @toggle-theme="toggleTheme" />
       <main class="dashboard-main">
-        <component :is="currentSectionComponent" />
+        <component :is="currentSectionComponent" @option-selected="updateMainContent" />
       </main>
     </div>
   </div>
@@ -21,7 +21,8 @@ import BudgetingSection from '../components/dashboard/sections/BudgetingSection.
 import LinkBankSection from '../components/dashboard/sections/LinkBankSection.vue';
 import AccountSettingsSection from '../components/dashboard/sections/AccountSettingsSection.vue';
 import AccountSummary from '../components/dashboard/sections/AccountSummary.vue';
-import InvestmentsSection from '../components/dashboard/sections/InvestmentsSection.vue'; // ✅ Added Investments Section
+import InvestmentsSection from '../components/dashboard/sections/InvestmentsSection.vue';
+import TransactionsSection from '../components/dashboard/sections/TransactionsSection.vue';
 
 export default {
   name: 'DashboardPage',
@@ -32,7 +33,8 @@ export default {
     LinkBankSection,
     AccountSettingsSection,
     AccountSummary,
-    InvestmentsSection, // ✅ Registered Investments Section
+    InvestmentsSection,
+    TransactionsSection,
   },
   data() {
     return {
@@ -52,8 +54,10 @@ export default {
           return 'LinkBankSection';
         case 'accountSettings':
           return 'AccountSettingsSection';
-        case 'investments': // ✅ Added case for investments
+        case 'investments':
           return 'InvestmentsSection';
+        case 'transactions':
+          return 'TransactionsSection';
         case 'accountSummary':
         default:
           return 'AccountSummary';
@@ -103,7 +107,7 @@ export default {
       this.isLightMode = !this.isLightMode;
     },
     updateMainContent(section) {
-      // ✅ Ensures sidebar can switch to investments
+      console.log(`✅ Current section updated to: ${section}`);
       this.currentSection = section;
     },
   },

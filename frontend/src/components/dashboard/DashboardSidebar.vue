@@ -36,9 +36,13 @@
           <i class="fas fa-university icon"></i> 
           <span v-if="!isCollapsed || isHovered"> Link Other Accounts </span>
         </li>
-        <li @click="selectOption('investments')">  <!-- ✅ Added Investments Option -->
+        <li @click="selectOption('investments')">
           <i class="fas fa-chart-pie icon"></i>
           <span v-if="!isCollapsed || isHovered"> Investments </span>
+        </li>
+        <li @click="selectOption('transactions')">
+          <i class="fas fa-exchange-alt icon"></i>
+          <span v-if="!isCollapsed || isHovered"> Transactions </span>
         </li>
         <li @click="selectOption('accountSettings')">
           <i class="fas fa-user-cog icon"></i> 
@@ -60,17 +64,16 @@ export default {
   },
   data() {
     return {
-      isCollapsed: false, // Sidebar collapse state
-      isHovered: false, // Track hover state for sidebar
+      isCollapsed: false,
+      isHovered: false,
       avatars: [
-        'girl.png', 'man.png', 'profile 2.png', 'human.png', 'boy.png', 'woman.png', 'profile.png'
+        'girl.png', 'man.png', 'human.png', 'boy.png', 'woman.png', 'profile.png'
       ],
       selectedAvatar: '',
       showAvatarSelection: false,
     };
   },
   created() {
-    // Set a random avatar as the default one
     this.selectedAvatar = this.avatars[Math.floor(Math.random() * this.avatars.length)];
   },
   methods: {
@@ -86,7 +89,6 @@ export default {
       localStorage.setItem('selectedAvatar', avatar);
     },
     selectOption(option) {
-      // ✅ Ensure "Investments" is emitted properly to DashboardPage.vue
       this.$emit('option-selected', option);
     },
   },
