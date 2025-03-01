@@ -1,12 +1,10 @@
 <template>
-  <aside :class="['dashboard-sidebar', {collapsed: isCollapsed}]"
-    @mouseover="isHovered = true"
-    @mouseleave="isHovered = false">
+  <aside :class="['dashboard-sidebar', {collapsed: isCollapsed}]">
     <button class="collapse-btn" @click="toggleSidebar">
       <i class="fas fa-arrow-right" v-if="isCollapsed"></i>
       <i class="fas fa-arrow-left" v-if="!isCollapsed"></i>
     </button>
-    <div class="avatar-section">
+    <div class="avatar-section" v-if="!isCollapsed">
       <img :src="`/avatars/${selectedAvatar}`" alt="User Avatar" class="avatar" @click="toggleAvatarSelection" />
       <div v-if="showAvatarSelection" class="avatar-selection">
         <div class="avatars-list">
@@ -26,27 +24,27 @@
       <ul>
         <li @click="selectOption('accountSummary')">
           <i class="fas fa-wallet icon"></i>
-          <span v-if="!isCollapsed || isHovered"> Account Summary </span>
-        </li>
-        <li @click="selectOption('budgeting')">
-          <i class="fas fa-chart-line icon"></i> 
-          <span v-if="!isCollapsed || isHovered"> Budgeting </span>
+          <span v-if="!isCollapsed"> Account Summary </span>
         </li>
         <li @click="selectOption('linkBank')">
           <i class="fas fa-university icon"></i> 
-          <span v-if="!isCollapsed || isHovered"> Link Other Accounts </span>
-        </li>
-        <li @click="selectOption('investments')">
-          <i class="fas fa-chart-pie icon"></i>
-          <span v-if="!isCollapsed || isHovered"> Investments </span>
+          <span v-if="!isCollapsed"> Link Accounts </span>
         </li>
         <li @click="selectOption('transactions')">
           <i class="fas fa-exchange-alt icon"></i>
-          <span v-if="!isCollapsed || isHovered"> Transactions </span>
+          <span v-if="!isCollapsed"> Transactions </span>
+        </li>
+        <li @click="selectOption('budgeting')">
+          <i class="fas fa-chart-line icon"></i> 
+          <span v-if="!isCollapsed"> Budgeting </span>
+        </li>
+        <li @click="selectOption('investments')">
+          <i class="fas fa-chart-pie icon"></i>
+          <span v-if="!isCollapsed"> Investments </span>
         </li>
         <li @click="selectOption('accountSettings')">
           <i class="fas fa-user-cog icon"></i> 
-          <span v-if="!isCollapsed || isHovered"> Account Settings </span>
+          <span v-if="!isCollapsed"> Account Settings </span>
         </li>
       </ul>
     </nav>
@@ -65,7 +63,6 @@ export default {
   data() {
     return {
       isCollapsed: false,
-      isHovered: false,
       avatars: [
         'girl.png', 'man.png', 'human.png', 'boy.png', 'woman.png', 'profile.png'
       ],
@@ -79,6 +76,9 @@ export default {
   methods: {
     toggleSidebar() {
       this.isCollapsed = !this.isCollapsed;
+      if (this.isCollapsed) {
+        this.showAvatarSelection = false;
+      }
     },
     toggleAvatarSelection() {
       this.showAvatarSelection = !this.showAvatarSelection;
@@ -116,37 +116,6 @@ export default {
 
 .dashboard-sidebar.collapsed {
   max-width: 80px;
-}
-
-.dashboard-sidebar.collapsed:hover {
-  max-width: 250px;
-}
-
-.nav-section li span {
-  display: none;
-}
-
-.dashboard-sidebar .nav-section li span {
-  display: inline-block;
-}
-
-.dashboard-sidebar.collapsed:hover .nav-section li span {
-  display: inline-block;
-}
-
-.icon {
-  margin-right: 10px;
-  font-size: 1.2rem;
-}
-
-@media (max-width: 768px) {
-  .dashboard-sidebar .nav-section li span {
-    display: none;
-  }
-  
-  .dashboard-sidebar.collapsed:hover .nav-section li span {
-    display: inline-block;
-  }
 }
 
 .collapse-btn {
@@ -241,6 +210,7 @@ nav ul li {
   padding: 10px;
   display: flex;
   align-items: center;
+  gap: 10px;
   transition: background-color 0.3s ease, transform 0.3s ease;
   border-radius: 10px;
 }
@@ -248,48 +218,5 @@ nav ul li {
 nav ul li:hover {
   background-color: rgba(255, 255, 255, 0.1);
   transform: translateX(5px);
-}
-
-.icon {
-  margin-right: 10px;
-  font-size: 1.2rem;
-}
-
-@media (max-width: 768px) {
-  .dashboard-sidebar {
-    width: 100%;
-    max-width: none;
-    height: auto;
-    position: relative;
-  }
-
-  .avatar {
-    width: 70px;
-    height: 70px;
-  }
-
-  .nav-section {
-    align-items: center;
-  }
-
-  nav ul li {
-    width: 100%;
-    text-align: center;
-  }
-}
-
-@media (max-width: 480px) {
-  .avatar-section {
-    margin-top: 20px;
-  }
-
-  .username {
-    font-size: 1rem;
-  }
-
-  nav ul li {
-    padding: 8px;
-    margin-bottom: 10px;
-  }
 }
 </style>

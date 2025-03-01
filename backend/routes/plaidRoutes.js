@@ -54,7 +54,6 @@ router.post('/exchange/public_token', async (req, res) => {
   }
 });
 
-// ✅ Retrieve Linked Accounts (💡 Fixes 404 Issue)
 router.get('/accounts', async (req, res) => {
   try {
     console.log('📡 Fetching Linked Accounts...');
@@ -66,15 +65,25 @@ router.get('/accounts', async (req, res) => {
 
     const response = await plaidClient.accountsGet({ access_token });
 
-    console.log(`✅ Retrieved ${response.data.accounts.length} accounts.`);
-    res.json(response.data.accounts);
+    console.log(`✅ Full Accounts Response:`, JSON.stringify(response.data, null, 2));
+
+    // ✅ Include all account types (checking, savings, credit, loans, investment)
+    const formattedAccounts = response.data.accounts.map((acc) => ({
+      account_id: acc.account_id,
+      name: acc.name,
+      type: acc.type, // e.g., depository, credit, loan, investment
+      subtype: acc.subtype, // e.g., checking, savings, mortgage, 401k
+      balances: acc.balances,
+    }));
+
+    res.json(formattedAccounts);
   } catch (error) {
     console.error('❌ Error retrieving accounts:', error.response?.data || error);
     res.status(500).json({ error: 'Failed to retrieve accounts' });
   }
 });
 
-// ✅ Retrieve Transactions (Fixing Credit/Debit Sign Issues)
+
 router.get('/transactions', async (req, res) => {
   try {
     console.log('📡 Fetching Transactions...');
@@ -103,44 +112,21 @@ router.get('/transactions', async (req, res) => {
       transactions = [...transactions, ...response.data.transactions];
       offset += response.data.transactions.length;
 
+      console.log(`✅ Full Transactions Response (Batch ${offset}):`, JSON.stringify(response.data, null, 2));
+
     } while (transactions.length < total_transactions);
 
-    // ✅ Remove Duplicates
-    const uniqueTransactions = new Map();
-    
-    transactions.forEach(txn => {
-      if (!uniqueTransactions.has(txn.transaction_id)) {
-        uniqueTransactions.set(txn.transaction_id, txn);
-      }
-    });
+    // ✅ Include different transaction categories
+    const formattedTransactions = transactions.map((txn) => ({
+      transaction_id: txn.transaction_id,
+      date: txn.date,
+      merchant: txn.name || 'Unknown Merchant',
+      category: txn.personal_finance_category?.primary || txn.category?.join(' > ') || 'Uncategorized',
+      amount: txn.amount,
+      payment_channel: txn.payment_channel, // e.g., online, in-store
+      location: txn.location.city ? `${txn.location.city}, ${txn.location.region}` : 'Unknown Location',
+    }));
 
-    const cleanedTransactions = Array.from(uniqueTransactions.values());
-
-    // ✅ Process Transactions (Fixing Signs Using `transaction_type`)
-    const formattedTransactions = cleanedTransactions.map((txn) => {
-      const merchant = txn.name || txn.merchant_name || 'Unknown Merchant';
-      const category = txn.personal_finance_category?.primary || (txn.category ? txn.category.join(' > ') : 'Uncategorized');
-
-      let correctedAmount = txn.amount;
-
-      // 🔹 **Correcting Amount Sign Based on Transaction Type**
-      if (txn.transaction_type === 'credit' || category === 'INCOME') {
-        correctedAmount = Math.abs(txn.amount); // **Ensure credits are positive**
-      } else {
-        correctedAmount = -Math.abs(txn.amount); // **Ensure expenses are negative**
-      }
-
-      return {
-        transaction_id: txn.transaction_id,
-        date: txn.date,
-        merchant,
-        category,
-        amount: correctedAmount,
-        include: true,
-      };
-    });
-
-    console.log(`✅ Retrieved ${formattedTransactions.length} unique transactions.`);
     res.json(formattedTransactions);
   } catch (error) {
     console.error('❌ Error retrieving transactions:', error.response?.data || error);

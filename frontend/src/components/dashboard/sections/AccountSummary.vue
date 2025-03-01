@@ -5,44 +5,32 @@
       
       <!-- Transactions Tile -->
       <div class="tile transactions" @click="selectSection('transactions')">
+        <i class="fas fa-exchange-alt"></i>
         <h2>Transactions</h2>
-        <p v-if="latestTransaction">
-          Last: {{ latestTransaction.merchant }} - ${{ latestTransaction.amount }}
-        </p>
-        <p v-else>No recent transactions</p>
       </div>
 
       <!-- Budgeting Tile -->
       <div class="tile budgeting" @click="selectSection('budgeting')">
+        <i class="fas fa-wallet"></i>
         <h2>Budgeting</h2>
-        <p v-if="budgetData">
-          Remaining: ${{ budgetData.remaining ?? '0.00' }}
-        </p>
-        <p v-else>No budget data</p>
       </div>
 
       <!-- Investments Tile -->
       <div class="tile investments" @click="selectSection('investments')">
+        <i class="fas fa-chart-line"></i>
         <h2>Investments</h2>
-        <p v-if="portfolioValue !== null">
-          Portfolio: ${{ portfolioValue?.toFixed(2) ?? '0.00' }}
-        </p>
-        <p v-else>No investment data</p>
       </div>
 
       <!-- Linked Accounts Tile -->
       <div class="tile link-accounts" @click="selectSection('linkBank')">
+        <i class="fas fa-university"></i>
         <h2>Linked Accounts</h2>
-        <p v-if="linkedAccounts.length > 0">
-          {{ linkedAccounts.length }} Accounts
-        </p>
-        <p v-else>No accounts linked</p>
       </div>
 
       <!-- Account Settings Tile -->
       <div class="tile account-settings" @click="selectSection('accountSettings')">
+        <i class="fas fa-cog"></i>
         <h2>Account Settings</h2>
-        <p>Manage Preferences & Security</p>
       </div>
 
     </div>
@@ -50,34 +38,15 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
-
 export default {
   name: 'AccountSummary',
-  emits: ['option-selected'], // ✅ Ensure event is emitted
+  emits: ['option-selected'],
   setup(_, { emit }) {
-    const latestTransaction = ref(null);
-    const budgetData = ref(null);
-    const portfolioValue = ref(null);
-    const linkedAccounts = ref([]);
-
-    // ✅ Correctly emits event to DashboardPage.vue
     const selectSection = (section) => {
       console.log(`📌 Emitting event for section: ${section}`);
       emit('option-selected', section);
     };
-
-    onMounted(() => {
-      console.log("✅ AccountSummary mounted!");
-    });
-
-    return {
-      selectSection,
-      latestTransaction,
-      budgetData,
-      portfolioValue,
-      linkedAccounts
-    };
+    return { selectSection };
   }
 };
 </script>
@@ -85,47 +54,95 @@ export default {
 <style scoped>
 .account-summary {
   text-align: center;
-  padding: 40px;
+  padding: 50px 5%;
 }
 
 .tile-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
-  margin-top: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Ensures better spacing */
+  gap: 30px; /* Increased spacing between tiles */
+  margin-top: 30px;
+  padding: 20px;
+  justify-content: center;
+  align-items: center;
 }
 
+/* Individual Tile Styling */
 .tile {
-  padding: 20px;
-  border-radius: 15px;
+  padding: 40px; /* Increased padding for better proportions */
+  border-radius: 18px;
   text-align: center;
   cursor: pointer;
   color: white;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  font-weight: bold;
+  position: relative;
+  backdrop-filter: blur(15px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
+/* Icons */
+.tile i {
+  font-size: 3rem; /* Slightly increased for better balance */
+  margin-bottom: 15px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Hover Effect */
 .tile:hover {
-  transform: scale(1.05);
-  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.35);
 }
 
-/* Tile Colors */
-.transactions { background: #007bff; }
-.budgeting { background: #28a745; }
-.investments { background: #fd7e14; }
-.link-accounts { background: #6c757d; }
-.account-settings { background: #6f42c1; }
+/* Tile Colors with Gradient */
+.transactions { background: linear-gradient(135deg, #007bff, #0056b3); }
+.budgeting { background: linear-gradient(135deg, #28a745, #1e7e34); }
+.investments { background: linear-gradient(135deg, #fd7e14, #c05600); }
+.link-accounts { background: linear-gradient(135deg, #6c757d, #4d5257); }
+.account-settings { background: linear-gradient(135deg, #6f42c1, #4b2f91); }
 
 h1 {
-  font-size: 2.5rem;
-  margin-bottom: 20px;
+  font-size: 2.8rem;
+  margin-bottom: 30px;
+  color: #fff;
+  text-shadow: 2px 2px 12px rgba(0, 0, 0, 0.25);
 }
 
 h2 {
-  margin: 0 0 10px;
+  margin: 0;
+  font-size: 1.5rem;
 }
 
-p {
-  font-size: 1.2rem;
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .tile-container {
+    grid-template-columns: repeat(2, minmax(250px, 1fr)); /* 2 columns on medium screens */
+  }
+}
+
+@media (max-width: 768px) {
+  .tile-container {
+    grid-template-columns: 1fr; /* Stacks tiles on small screens */
+  }
+  .tile {
+    padding: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tile {
+    padding: 25px;
+    font-size: 1.1rem;
+  }
+  .tile i {
+    font-size: 2.4rem;
+  }
 }
 </style>
