@@ -38,16 +38,6 @@
             <input type="password" id="confirmPassword" v-model="confirmPassword" />
             <span v-if="passwordError" class="error-message">{{ passwordError }}</span>
           </div>
-          <div class="form-field">
-            <label for="bank_account">Bank Account Number:</label>
-            <input type="text" id="bank_account" v-model="bankAccount" />
-            <span v-if="bankAccountError" class="error-message">{{ bankAccountError }}</span>
-          </div>
-          <div class="form-field">
-            <label for="routing_number">Routing Number:</label>
-            <input type="text" id="routing_number" v-model="routingNumber" />
-            <span v-if="routingNumberError" class="error-message">{{ routingNumberError }}</span>
-          </div>
           <button type="submit" :disabled="loading">Sign Up</button>
         </form>
         <p class="login-link">Already have an account? <router-link to="/login">Login here</router-link>.</p>
@@ -74,15 +64,11 @@ export default {
       lastName: '',
       password: '',
       confirmPassword: '',
-      bankAccount: '',
-      routingNumber: '',
       usernameError: '',
       emailError: '',
       passwordError: '',
       firstNameError: '',
       lastNameError: '',
-      bankAccountError: '',
-      routingNumberError: '',
       loading: false,
     };
   },
@@ -94,12 +80,11 @@ export default {
       this.passwordError = '';
       this.firstNameError = '';
       this.lastNameError = '';
-      this.bankAccountError = '';
-      this.routingNumberError = '';
 
       // Basic frontend validation
       const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       const namePattern = /^[a-zA-Z]+$/;
+
       if (!this.username) {
         this.usernameError = 'Username is required.';
         return;
@@ -129,14 +114,6 @@ export default {
         this.passwordError = 'Passwords do not match.';
         return;
       }
-      if (!this.bankAccount) {
-        this.bankAccountError = 'Bank Account Number is required.';
-        return;
-      }
-      if (!this.routingNumber) {
-        this.routingNumberError = 'Routing Number is required.';
-        return;
-      }
 
       // Send the data to the backend
       this.loading = true;
@@ -147,20 +124,16 @@ export default {
           firstName: this.firstName,
           lastName: this.lastName,
           password: this.password,
-          bank_account: this.bankAccount,
-          routing_number: this.routingNumber
         });
 
         // Handle successful signup with received token
         if (response.data.success) {
           console.log('Signup successful. Saving token and redirecting to dashboard.');
           localStorage.setItem('token', response.data.token); // Save token to local storage
-          localStorage.setItem('bankAccount', this.bankAccount); // Save bank account ID to local storage
           this.$router.push('/dashboard'); // Redirect to dashboard
         } else {
           alert('Signup failed: ' + response.data.message);
         }
-
       } catch (error) {
         if (error.response && error.response.data.error) {
           if (error.response.data.error.includes('Username')) {

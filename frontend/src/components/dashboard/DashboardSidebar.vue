@@ -1,12 +1,10 @@
 <template>
-  <aside :class="['dashboard-sidebar', {collapsed: isCollapsed}]"
-  @mouseover="isHovered = true"
-  @mouseleave="isHovered = false">
+  <aside :class="['dashboard-sidebar', {collapsed: isCollapsed}]">
     <button class="collapse-btn" @click="toggleSidebar">
       <i class="fas fa-arrow-right" v-if="isCollapsed"></i>
       <i class="fas fa-arrow-left" v-if="!isCollapsed"></i>
     </button>
-    <div class="avatar-section">
+    <div class="avatar-section" v-if="!isCollapsed">
       <img :src="`/avatars/${selectedAvatar}`" alt="User Avatar" class="avatar" @click="toggleAvatarSelection" />
       <div v-if="showAvatarSelection" class="avatar-selection">
         <div class="avatars-list">
@@ -26,19 +24,27 @@
       <ul>
         <li @click="selectOption('accountSummary')">
           <i class="fas fa-wallet icon"></i>
-          <span v-if="!isCollapsed || isHovered"> Account Summary </span>
-        </li>
-        <li @click="selectOption('budgeting')">
-          <i class="fas fa-chart-line icon"></i> 
-          <span v-if="!isCollapsed || isHovered"> Budgeting </span>
+          <span v-if="!isCollapsed"> Account Summary </span>
         </li>
         <li @click="selectOption('linkBank')">
           <i class="fas fa-university icon"></i> 
-          <span v-if="!isCollapsed || isHovered"> Link Other Accounts </span>
+          <span v-if="!isCollapsed"> Link Accounts </span>
+        </li>
+        <li @click="selectOption('transactions')">
+          <i class="fas fa-exchange-alt icon"></i>
+          <span v-if="!isCollapsed"> Transactions </span>
+        </li>
+        <li @click="selectOption('budgeting')">
+          <i class="fas fa-chart-line icon"></i> 
+          <span v-if="!isCollapsed"> Budgeting </span>
+        </li>
+        <li @click="selectOption('investments')">
+          <i class="fas fa-chart-pie icon"></i>
+          <span v-if="!isCollapsed"> Investments </span>
         </li>
         <li @click="selectOption('accountSettings')">
           <i class="fas fa-user-cog icon"></i> 
-          <span v-if="!isCollapsed || isHovered"> Account Settings </span>
+          <span v-if="!isCollapsed"> Account Settings </span>
         </li>
       </ul>
     </nav>
@@ -56,23 +62,23 @@ export default {
   },
   data() {
     return {
-      isCollapsed: false, // New data property to track sidebar state
-      isHovered: false, // Track hover state for sidebar
+      isCollapsed: false,
       avatars: [
-        'girl.png', 'man.png', 'profile 2.png', 'human.png', 'boy.png', 'woman.png', 'profile.png'
+        'girl.png', 'man.png', 'human.png', 'boy.png', 'woman.png', 'profile.png'
       ],
       selectedAvatar: '',
       showAvatarSelection: false,
-      sidebarCollapsed: false, // Track whether the sidebar is collapsed
     };
   },
   created() {
-    // Set a random avatar as the default one when the component is created
     this.selectedAvatar = this.avatars[Math.floor(Math.random() * this.avatars.length)];
   },
   methods: {
     toggleSidebar() {
       this.isCollapsed = !this.isCollapsed;
+      if (this.isCollapsed) {
+        this.showAvatarSelection = false;
+      }
     },
     toggleAvatarSelection() {
       this.showAvatarSelection = !this.showAvatarSelection;
@@ -83,7 +89,6 @@ export default {
       localStorage.setItem('selectedAvatar', avatar);
     },
     selectOption(option) {
-      // Emit an event with the selected option
       this.$emit('option-selected', option);
     },
   },
@@ -100,71 +105,34 @@ export default {
   color: #ffffff;
   padding: 20px;
   box-sizing: border-box;
-  height: 100vh; /* Set to full height */
+  height: 100vh;
   font-family: 'Arial, sans-serif';
   display: flex;
   flex-direction: column;
   align-items: center;
   position: relative;
-  overflow-y: auto; /* Allow vertical scrolling for small screens */
+  overflow-y: auto;
 }
 
 .dashboard-sidebar.collapsed {
-  max-width: 80px; /* Adjust this value to control collapsed width */
-}
-
-/* Handle the hover effect to show text when collapsed */
-.dashboard-sidebar.collapsed:hover {
-  max-width: 250px; /* Ensure the sidebar expands on hover */
-}
-
-.nav-section li span {
-  display: none; /* Hide text by default */
-}
-
-/* Show text when sidebar is not collapsed or hovered */
-.dashboard-sidebar .nav-section li span {
-  display: inline-block;
-}
-
-/* Show text when the sidebar is collapsed and hovered */
-.dashboard-sidebar.collapsed:hover .nav-section li span {
-  display: inline-block;
-}
-
-.icon {
-  margin-right: 10px;
-  font-size: 1.2rem;
-}
-
-/* Add media queries if necessary */
-@media (max-width: 768px) {
-  /* Hide text when sidebar is collapsed */
-  .dashboard-sidebar .nav-section li span {
-    display: none;
-  }
-  
-  /* Show text when sidebar is collapsed and hovered */
-  .dashboard-sidebar.collapsed:hover .nav-section li span {
-    display: inline-block;
-  }
+  max-width: 80px;
 }
 
 .collapse-btn {
   position: absolute;
-  top: 5px; /* Adjust top value to move the button lower or higher */
-  right: 20px; /* Adjust left value to position it horizontally */
+  top: 5px;
+  right: 20px;
   background: none;
   border: none;
   color: #fff;
   font-size: 1.5rem;
   cursor: pointer;
-  z-index: 1000; /* Ensure the button appears above other elements */
+  z-index: 1000;
 }
 
 .avatar-section {
   text-align: center;
-  margin-top: 30px; /* Reduce margin for better fit on smaller screens */
+  margin-top: 30px;
   margin-bottom: 20px;
   position: relative;
 }
@@ -183,10 +151,10 @@ export default {
   left: 50%;
   transform: translateX(-50%);
   background-color: #34495e;
-  padding: 10px 15px; /* Adjust padding to make it more compact */
+  padding: 10px 15px;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-  width: 200px; /* Adjust width to fit smaller screens */
+  width: 200px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -194,13 +162,13 @@ export default {
 
 .avatars-list {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Arrange avatars in 3 columns for better responsiveness */
+  grid-template-columns: repeat(3, 1fr);
   gap: 10px;
   margin-top: 10px;
 }
 
 .avatar-option {
-  width: 35px; /* Adjust avatar size for smaller screens */
+  width: 35px;
   height: 35px;
   border-radius: 50%;
   cursor: pointer;
@@ -213,25 +181,25 @@ export default {
 
 .username {
   margin-top: 10px;
-  font-size: 1.2rem; /* Reduce font size for better fit on smaller screens */
+  font-size: 1.2rem;
   font-weight: bold;
   color: #ffffff;
 }
 
 .nav-section {
   width: 100%;
-  margin-top: 30px; /* Reduce space between avatar and nav links for smaller screens */
+  margin-top: 30px;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; /* Align items upwards for better centering */
+  justify-content: flex-start;
   align-items: flex-start;
 }
 
 nav ul {
   list-style: none;
   padding: 0;
-  margin: 0; /* Remove default margin */
+  margin: 0;
   font-size: 1rem;
 }
 
@@ -242,66 +210,13 @@ nav ul li {
   padding: 10px;
   display: flex;
   align-items: center;
+  gap: 10px;
   transition: background-color 0.3s ease, transform 0.3s ease;
-  border-radius: 10px; /* Round corners for buttons */
+  border-radius: 10px;
 }
 
 nav ul li:hover {
   background-color: rgba(255, 255, 255, 0.1);
-  text-decoration: none;
   transform: translateX(5px);
-}
-
-.icon {
-  margin-right: 10px;
-  font-size: 1.2rem;
-}
-
-/* Media Queries for Responsiveness */
-@media (max-width: 768px) {
-  .dashboard-sidebar {
-    width: 100%;
-    max-width: none;
-    height: auto;
-    position: relative;
-  }
-
-  .avatar {
-    width: 70px;
-    height: 70px;
-  }
-
-  .nav-section {
-    align-items: center;
-  }
-
-  nav ul li {
-    width: 100%;
-    text-align: center;
-  }
-  /* Hide text when sidebar is collapsed */
-  .dashboard-sidebar .nav-section li span {
-    display: none;
-  }
-
-  /* Adjust icon size for better visual balance */
-  .icon {
-    font-size: 1.5rem;
-  }  
-}
-
-@media (max-width: 480px) {
-  .avatar-section {
-    margin-top: 20px;
-  }
-
-  .username {
-    font-size: 1rem;
-  }
-
-  nav ul li {
-    padding: 8px;
-    margin-bottom: 10px;
-  }
 }
 </style>

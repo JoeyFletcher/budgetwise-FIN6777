@@ -3,23 +3,34 @@
     <div class="link-bank-container">
       <div class="header-container">
         <h2>Link Your Bank Account</h2>
-        
       </div>
+
       <button @click="generateLinkToken" class="link-bank-button">
-        Connect Your Bank Account
+        <i class="fas fa-link"></i> Connect Your Bank Account
       </button>
-      <div v-if="accounts.length > 0" class="linked-accounts">
+
+      <div v-if="accounts && accounts.length > 0" class="linked-accounts">
         <h3>Linked Accounts</h3>
-        <ul>
-          <li v-for="account in accounts" :key="account.account_id" class="account-item">
-            <div class="account-info">
-              <strong>{{ account.name }}</strong> - {{ account.subtype }}
+        <div class="account-list">
+          <div v-for="account in accounts" :key="account.account_id" class="account-card">
+            <div class="account-header">
+              <i class="fas fa-university"></i>
+              <span>{{ account.name || 'Unnamed Account' }}</span>
             </div>
-            <div class="account-balance">
-              Balance: {{ account.balances.current }} USD
+            <div class="account-details">
+              <p><strong>Type:</strong> {{ account.subtype || 'Unknown' }}</p>
+              <p><strong>Balance:</strong> {{ account.balances?.current ? account.balances.current.toFixed(2) : 'N/A' }} USD</p>
             </div>
-          </li>
-        </ul>
+          </div>
+        </div>
+      </div>
+
+      <div v-else-if="loading" class="loading-message">
+        <p>Loading linked accounts...</p>
+      </div>
+
+      <div v-else class="no-accounts">
+        <p>No linked accounts found. Try reconnecting.</p>
       </div>
     </div>
   </section>
@@ -53,13 +64,11 @@ export default {
       if (window.Plaid) {
         const handler = window.Plaid.create({
           token: linkToken,
-          onSuccess: (public_token, metadata) => {
-            exchangePublicToken(public_token);
+          onSuccess: async (public_token, metadata) => {
+            await exchangePublicToken(public_token);
           },
-          onExit: (err, metadata) => {
-            if (err) {
-              console.error('Error with Plaid Link:', err);
-            }
+          onExit: (err) => {
+            if (err) console.error('Error with Plaid Link:', err);
           },
         });
         handler.open();
@@ -73,8 +82,7 @@ export default {
         loading.value = true;
         const response = await api.post('/plaid/exchange/public_token', { public_token: publicToken });
         localStorage.setItem('access_token', response.data.access_token);
-        console.log('Successfully exchanged public token and saved access token.');
-        fetchLinkedAccounts(response.data.access_token);
+        await fetchLinkedAccounts(response.data.access_token);
       } catch (error) {
         console.error('Error exchanging public token:', error);
       } finally {
@@ -88,9 +96,10 @@ export default {
         const response = await api.get('/plaid/accounts', {
           params: { access_token: accessToken },
         });
-        accounts.value = response.data.accounts;
+        accounts.value = Array.isArray(response.data) ? response.data : [];
       } catch (error) {
         console.error('Error fetching linked accounts:', error);
+        accounts.value = [];
       } finally {
         loading.value = false;
       }
@@ -101,6 +110,8 @@ export default {
       plaidScript.src = 'https://cdn.plaid.com/link/v2/stable/link-initialize.js';
       plaidScript.async = true;
       document.head.appendChild(plaidScript);
+      const storedToken = localStorage.getItem('access_token');
+      if (storedToken) fetchLinkedAccounts(storedToken);
     });
 
     return {
@@ -114,141 +125,79 @@ export default {
 
 <style scoped>
 .link-bank-section {
+  text-align: center;
   padding: 40px;
-  background: linear-gradient(135deg, #e0f7fa, #eaf0f6);
-  border-radius: 15px;
-  font-family: 'Arial, sans-serif';
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .link-bank-container {
-  text-align: center;
-  background-color: #ffffff;
-  padding: 30px;
-  border-radius: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   max-width: 900px;
-  width: 100%;
-}
-
-.header-container {
-  text-align: center;
-  margin-bottom: 20px;
-  background-color: #007bff;
-  color: #ffffff;
-  padding: 20px;
-  border-radius: 10px;
+  margin: auto;
+  padding: 30px;
+  background: rgba(0, 0, 0, 0.85);
+  border-radius: 16px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
 }
 
 .header-container h2 {
-  margin: 0;
-}
-
-.date-range {
-  display: flex;
-  gap: 10px;
-}
-
-.date-input {
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-}
-
-.fetch-data-button {
-  padding: 10px 20px;
-  color: #ffffff;
-  background-color: #28a745;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.fetch-data-button:hover {
-  background-color: #218838;
+  color: #fff;
+  margin-bottom: 20px;
 }
 
 .link-bank-button {
-  margin-top: 20px;
-}
-
-.button-icon {
-  font-size: 1.5rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  font-size: 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
 }
 
 .link-bank-button:hover {
   background-color: #0056b3;
-  transform: scale(1.05);
-}
-
-.linked-accounts {
-  margin-top: 40px;
-  text-align: left;
-  width: 100%;
 }
 
 .linked-accounts h3 {
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: #222;
-  margin-bottom: 20px;
+  color: #fff;
+  margin-top: 20px;
 }
 
-.linked-accounts ul {
-  list-style: none;
-  padding: 0;
+.account-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 15px;
+  margin-top: 15px;
 }
 
-.linked-accounts li {
-  font-size: 1.2rem;
-  margin: 15px 0;
-  padding: 20px;
-  background-color: #f1f1f1;
+.account-card {
+  background: rgba(255, 255, 255, 0.15);
+  padding: 15px;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   transition: transform 0.2s;
 }
 
-.linked-accounts li:hover {
-  transform: scale(1.02);
+.account-card:hover {
+  transform: scale(1.05);
 }
 
-.account-info {
-  font-weight: bold;
-  color: #004085;
+.account-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.2rem;
+  color: #fff;
 }
 
-.account-balance {
-  color: #155724;
-  font-weight: bold;
+.account-details {
+  color: #ddd;
+  font-size: 1rem;
+  margin-top: 8px;
 }
 
-.loading-spinner {
+.loading-message, .no-accounts {
+  color: #ccc;
+  font-size: 1.2rem;
   margin-top: 20px;
-  border: 4px solid rgba(0, 0, 0, 0.1);
-  border-left-color: #007bff;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
 }
 </style>

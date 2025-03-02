@@ -4,7 +4,7 @@
     <div class="dashboard-content">
       <DashboardHeader :userData="userData" :isLightMode="isLightMode" @sign-out="signOut" @toggle-theme="toggleTheme" />
       <main class="dashboard-main">
-        <component :is="currentSectionComponent" />
+        <component :is="currentSectionComponent" @option-selected="updateMainContent" />
       </main>
     </div>
   </div>
@@ -21,6 +21,8 @@ import BudgetingSection from '../components/dashboard/sections/BudgetingSection.
 import LinkBankSection from '../components/dashboard/sections/LinkBankSection.vue';
 import AccountSettingsSection from '../components/dashboard/sections/AccountSettingsSection.vue';
 import AccountSummary from '../components/dashboard/sections/AccountSummary.vue';
+import InvestmentsSection from '../components/dashboard/sections/InvestmentsSection.vue';
+import TransactionsSection from '../components/dashboard/sections/TransactionsSection.vue';
 
 export default {
   name: 'DashboardPage',
@@ -31,6 +33,8 @@ export default {
     LinkBankSection,
     AccountSettingsSection,
     AccountSummary,
+    InvestmentsSection,
+    TransactionsSection,
   },
   data() {
     return {
@@ -38,7 +42,7 @@ export default {
       userData: null,
       loading: true,
       isLightMode: false,
-      currentSection: 'accountSummary', // default section
+      currentSection: 'accountSummary', // Default section
     };
   },
   computed: {
@@ -50,8 +54,11 @@ export default {
           return 'LinkBankSection';
         case 'accountSettings':
           return 'AccountSettingsSection';
+        case 'investments':
+          return 'InvestmentsSection';
+        case 'transactions':
+          return 'TransactionsSection';
         case 'accountSummary':
-          return 'AccountSummary';
         default:
           return 'AccountSummary';
       }
@@ -100,7 +107,7 @@ export default {
       this.isLightMode = !this.isLightMode;
     },
     updateMainContent(section) {
-      // Update the current section with the selection from the sidebar
+      console.log(`✅ Current section updated to: ${section}`);
       this.currentSection = section;
     },
   },
