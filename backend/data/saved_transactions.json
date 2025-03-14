@@ -1,0 +1,76 @@
+{
+  "transactions": [
+    {
+      "transaction_id": "wmz1BPA8wAin19E1ePn9fza6kKgw8jtP1r3QZ",
+      "date": "2025-02-22",
+      "merchant": "Interest Earned",
+      "category": "INCOME",
+      "amount": 50,
+      "included": true
+    },
+    {
+      "transaction_id": "5mwaZlx9RxiBnzbnqoBzT1jm6qG3zRS5QZb6r",
+      "date": "2025-02-21",
+      "merchant": "Interest Earned",
+      "category": "INCOME",
+      "amount": 50,
+      "included": true
+    },
+    {
+      "transaction_id": "DDrG3eRd6RCoe9meQko9cMoB4vG59NF3Lv7ZN",
+      "date": "2025-02-15",
+      "merchant": "Dining - Local Sushi",
+      "category": "FOOD_AND_DRINK",
+      "amount": -60,
+      "included": true
+    },
+    {
+      "transaction_id": "XWNRld1j61uaZz4Z1eazcz1ND6ZG9Btbvd9Dv",
+      "date": "2025-02-12",
+      "merchant": "Netflix",
+      "category": "ENTERTAINMENT",
+      "amount": -50,
+      "included": true
+    },
+    {
+      "transaction_id": "6Ew4Mqm95mhM6mk6KVMmFPKAVbg9m8i8Pgmze",
+      "date": "2025-02-10",
+      "merchant": "Whole Foods",
+      "category": "FOOD_AND_DRINK",
+      "amount": -85,
+      "included": true
+    },
+    {
+      "transaction_id": "RDeALKVx6VCnNvzNMWnvfDPW95ReAJCaoRwZ4",
+      "date": "2025-02-07",
+      "merchant": "Utility Bill - Electricity",
+      "category": "BILLS_AND_UTILITIES",
+      "amount": -90,
+      "included": true
+    },
+    {
+      "transaction_id": "vnrJzN58y5cGe5pe8aG5FmPDRb7VvaFqZWgwk",
+      "date": "2025-02-05",
+      "merchant": "Car Insurance Payment",
+      "category": "BILLS_AND_UTILITIES",
+      "amount": -150,
+      "included": true
+    },
+    {
+      "transaction_id": "9EvjpzV9DVhxgvygB6xvS6awJAnGvlC49RkKa",
+      "date": "2025-02-03",
+      "merchant": "Mortgage Payment - Wells Fargo",
+      "category": "LOAN_PAYMENTS",
+      "amount": -1800,
+      "included": true
+    },
+    {
+      "transaction_id": "ynaRx738y3cbnaynoVbaS1JQNP7gqlS48yogb",
+      "date": "2025-02-02",
+      "merchant": "Monthly Salary Deposit",
+      "category": "INCOME",
+      "amount": 4000,
+      "included": true
+    }
+  ]
+}
