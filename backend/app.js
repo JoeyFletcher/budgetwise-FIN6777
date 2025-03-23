@@ -11,6 +11,7 @@ const authRoutes = require("./routes/authRoutes");
 const signupRoutes = require("./routes/signupRoutes");
 const userRoutes = require("./routes/userRoutes");
 const alpacaRoutes = require("./routes/alpacaRoutes");
+const budgetRoutes = require("./routes/budgetRoutes");
 
 // 🏦 Import Plaid Routes (New Structure)
 const plaidAuthRoutes = require("./routes/plaid/plaidAuth");
@@ -18,8 +19,8 @@ const plaidAccountsRoutes = require("./routes/plaid/plaidAccounts");
 const plaidTransactionsRoutes = require("./routes/plaid/plaidTransactions");
 const plaidWebhooksRoutes = require("./routes/plaid/plaidWebhooks");
 
-// 🏦 Import Main Plaid Routes (⚠️ This was missing!)
-const plaidRoutes = require("./routes/plaidRoutes"); // ✅ Correct path
+// 🏦 Import Main Plaid Routes
+const plaidRoutes = require("./routes/plaidRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -40,6 +41,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/signup", signupRoutes);
 app.use("/api/user", authenticate, userRoutes);
 app.use("/api/alpaca", alpacaRoutes);
+app.use("/api/budget", budgetRoutes);
 
 // ✅ Debugging: Log Plaid Routes
 console.log("🏦 Registering Plaid Routes...");
