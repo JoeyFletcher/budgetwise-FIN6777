@@ -5,11 +5,13 @@
         <h2>Link Your Bank Account</h2>
       </div>
 
-      <button @click="generateLinkToken" class="link-bank-button">
-        <i class="fas fa-link"></i> Connect Your Bank Account
+      <!-- 🔹 Connect Bank Button -->
+      <button @click="generateLinkToken" class="link-bank-button" :disabled="loading">
+        <i :class="loading ? 'fas fa-spinner fa-spin' : 'fas fa-link'"></i> Connect Your Bank Account
       </button>
 
-      <div v-if="accounts && accounts.length > 0" class="linked-accounts">
+      <!-- 🔹 Show Linked Accounts -->
+      <div v-if="accounts.length > 0" class="linked-accounts">
         <h3>Linked Accounts</h3>
         <div class="account-list">
           <div v-for="account in accounts" :key="account.account_id" class="account-card">
@@ -19,16 +21,18 @@
             </div>
             <div class="account-details">
               <p><strong>Type:</strong> {{ account.subtype || 'Unknown' }}</p>
-              <p><strong>Balance:</strong> {{ account.balances?.current ? account.balances.current.toFixed(2) : 'N/A' }} USD</p>
+              <p><strong>Balance:</strong> {{ formatCurrency(account.balances?.current) }}</p>
             </div>
           </div>
         </div>
       </div>
 
+      <!-- 🔹 Loading State -->
       <div v-else-if="loading" class="loading-message">
         <p>Loading linked accounts...</p>
       </div>
 
+      <!-- 🔹 No Accounts Found -->
       <div v-else class="no-accounts">
         <p>No linked accounts found. Try reconnecting.</p>
       </div>
@@ -37,80 +41,121 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
-import api from '../../../api';
+import { ref, onMounted } from "vue";
+import api from "../../../api";
 
 export default {
-  name: 'LinkBankSection',
+  name: "LinkBankSection",
   setup() {
     const linkToken = ref(null);
     const accounts = ref([]);
     const loading = ref(false);
 
+    // ✅ Generate Plaid Link Token
     const generateLinkToken = async () => {
       try {
         loading.value = true;
-        const response = await api.post('/plaid/link/token');
+        console.log("📡 Requesting Plaid Link Token...");
+        const response = await api.post("/plaid/link/token");
         linkToken.value = response.data.link_token;
+        console.log("✅ Link Token received:", linkToken.value);
         initializePlaidLink(linkToken.value);
       } catch (error) {
-        console.error('Error generating link token:', error);
+        console.error("❌ Error generating link token:", error);
       } finally {
         loading.value = false;
       }
     };
 
+    // ✅ Initialize Plaid Link
     const initializePlaidLink = (linkToken) => {
       if (window.Plaid) {
+        console.log("🛠 Initializing Plaid Link...");
         const handler = window.Plaid.create({
           token: linkToken,
-          onSuccess: async (public_token, metadata) => {
+          onSuccess: async (public_token) => {
+            console.log("🔑 Public Token received:", public_token);
+            if (!public_token) {
+              console.error("❌ ERROR: Public token is undefined!");
+              return;
+            }
             await exchangePublicToken(public_token);
           },
           onExit: (err) => {
-            if (err) console.error('Error with Plaid Link:', err);
+            if (err) console.error("❌ Error with Plaid Link:", err);
           },
         });
         handler.open();
       } else {
-        console.error('Plaid library not loaded. Make sure the Plaid script is included.');
+        console.error("⚠️ Plaid script not loaded. Retrying...");
+        setTimeout(() => initializePlaidLink(linkToken), 2000);
       }
     };
 
-    const exchangePublicToken = async (publicToken) => {
+    // ✅ Exchange Public Token for Access Token
+    const exchangePublicToken = async (public_token) => {
       try {
         loading.value = true;
-        const response = await api.post('/plaid/exchange/public_token', { public_token: publicToken });
-        localStorage.setItem('access_token', response.data.access_token);
+        console.log("📡 Sending public_token:", public_token);
+        const response = await api.post("/plaid/exchange/public_token", { public_token });
+
+        if (!response.data.access_token) {
+          console.error("❌ ERROR: Access token not received from backend!", response.data);
+          return;
+        }
+
+        localStorage.setItem("access_token", response.data.access_token);
+        console.log("✅ Access Token Stored:", response.data.access_token);
         await fetchLinkedAccounts(response.data.access_token);
       } catch (error) {
-        console.error('Error exchanging public token:', error);
+        console.error("❌ Error exchanging public token:", error);
       } finally {
         loading.value = false;
       }
     };
 
+    // ✅ Fetch Linked Accounts (Fixed Path)
     const fetchLinkedAccounts = async (accessToken) => {
       try {
         loading.value = true;
-        const response = await api.get('/plaid/accounts', {
+        console.log("📡 Fetching linked accounts...");
+        const response = await api.get("/plaid/accounts/list", { // 🔥 FIXED PATH
           params: { access_token: accessToken },
         });
-        accounts.value = Array.isArray(response.data) ? response.data : [];
+
+        if (!response.data || !response.data.accounts) {
+          console.error("❌ ERROR: Invalid accounts response:", response.data);
+          accounts.value = [];
+          return;
+        }
+
+        accounts.value = response.data.accounts;
+        console.log("✅ Retrieved Accounts:", accounts.value);
       } catch (error) {
-        console.error('Error fetching linked accounts:', error);
+        console.error("❌ Error fetching linked accounts:", error);
         accounts.value = [];
       } finally {
         loading.value = false;
       }
     };
 
+    // ✅ Format Currency Properly
+    const formatCurrency = (amount) => {
+      return amount ? `$${amount.toFixed(2)}` : "N/A";
+    };
+
+    // ✅ Load Plaid Script on Mount & Fetch Accounts
     onMounted(() => {
-      const plaidScript = document.createElement('script');
-      plaidScript.src = 'https://cdn.plaid.com/link/v2/stable/link-initialize.js';
+      console.log("🛠 Loading Plaid Script...");
+      const plaidScript = document.createElement("script");
+      plaidScript.src = "https://cdn.plaid.com/link/v2/stable/link-initialize.js";
       plaidScript.async = true;
+      plaidScript.onload = () => {
+        console.log("✅ Plaid script loaded successfully.");
+      };
       document.head.appendChild(plaidScript);
-      const storedToken = localStorage.getItem('access_token');
+
+      const storedToken = localStorage.getItem("access_token");
       if (storedToken) fetchLinkedAccounts(storedToken);
     });
 
@@ -118,6 +163,7 @@ export default {
       generateLinkToken,
       accounts,
       loading,
+      formatCurrency,
     };
   },
 };
@@ -195,7 +241,8 @@ export default {
   margin-top: 8px;
 }
 
-.loading-message, .no-accounts {
+.loading-message,
+.no-accounts {
   color: #ccc;
   font-size: 1.2rem;
   margin-top: 20px;

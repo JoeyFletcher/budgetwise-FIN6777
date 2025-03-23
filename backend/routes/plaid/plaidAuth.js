@@ -1,15 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const plaidClient = require('../plaidClient'); // ✅ Ensure correct path
+const plaidClient = require('../../plaidClient');
 
-// ✅ Import Individual Plaid Route Handlers
-router.use('/auth', require('./plaid/plaidAuth'));
-router.use('/accounts', require('./plaid/plaidAccounts'));
-router.use('/transactions', require('./plaid/plaidTransactions'));
-router.use('/webhooks', require('./plaid/plaidWebhooks'));
+let ACCESS_TOKEN = process.env.PLAID_ACCESS_TOKEN || null;
 
-// ✅ Generate Plaid Link Token (Fixed Route Prefix)
-router.post('/link/token', async (req, res) => { // 🔥 FIXED: Removed extra `/plaid`
+// ✅ Generate Plaid Link Token
+router.post('/link/token', async (req, res) => {
   try {
     console.log('📡 Generating Plaid Link Token...');
     const response = await plaidClient.linkTokenCreate({
@@ -27,18 +23,29 @@ router.post('/link/token', async (req, res) => { // 🔥 FIXED: Removed extra `/
   }
 });
 
-// ✅ Exchange Public Token for Access Token (Fixed Route Prefix)
-router.post('/exchange/public_token', async (req, res) => { // 🔥 FIXED: Removed extra `/plaid`
+// ✅ Exchange Public Token for Access Token
+router.post('/exchange/public_token', async (req, res) => {
   try {
-    console.log('📡 Exchanging Public Token for Access Token...');
+    console.log('📡 Received Request Body:', req.body); // Debugging
+
     const { public_token } = req.body;
+    
     if (!public_token) {
       console.error('❌ public_token is undefined or missing!');
       return res.status(400).json({ error: 'Missing public token' });
     }
 
+    console.log('📡 Exchanging Public Token for Access Token...');
     const response = await plaidClient.itemPublicTokenExchange({ public_token });
-    res.json({ access_token: response.data.access_token, item_id: response.data.item_id });
+    ACCESS_TOKEN = response.data.access_token;
+
+    // ✅ Register Webhook
+    await plaidClient.itemWebhookUpdate({
+      access_token: ACCESS_TOKEN,
+      webhook: 'https://yourbackend.com/plaid/webhook',
+    });
+
+    res.json({ access_token: ACCESS_TOKEN, item_id: response.data.item_id });
   } catch (error) {
     console.error('❌ Error exchanging public token:', error.response?.data || error);
     res.status(500).json({ error: 'Failed to exchange public token' });

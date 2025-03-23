@@ -1,0 +1,82 @@
+[
+  {
+    "transaction_id": "Jpo7G36ervi8GNQwDomoHWK9JWo1VaCxy8zwx",
+    "date": "2025-02-22",
+    "merchant": "Interest Earned",
+    "category": "INCOME",
+    "amount": 50,
+    "included": true
+  },
+  {
+    "transaction_id": "klg8eVP5K3fGyk746NdNc8Rla8KVJMiaj5MAA",
+    "date": "2025-02-21",
+    "merchant": "Interest Earned",
+    "category": "INCOME",
+    "amount": 50,
+    "included": true
+  },
+  {
+    "transaction_id": "5lq9wWREQPfJqMKyRvmvsLpVDLJ5agcJnrkj6",
+    "date": "2025-02-18",
+    "merchant": "Uber Ride",
+    "category": "TRANSPORTATION",
+    "amount": -30,
+    "included": true
+  },
+  {
+    "transaction_id": "wPr8z4wV7MfxeM4zGaZaUeRZJe7l1LhMpXnK3",
+    "date": "2025-02-15",
+    "merchant": "Dining - Local Sushi",
+    "category": "FOOD_AND_DRINK",
+    "amount": -60,
+    "included": true
+  },
+  {
+    "transaction_id": "V3KNXM6Aevtwlp9ByWgWixyLVxod6RflVMGNR",
+    "date": "2025-02-12",
+    "merchant": "Netflix",
+    "category": "ENTERTAINMENT",
+    "amount": -50,
+    "included": true
+  },
+  {
+    "transaction_id": "epZmq93VklinmMKXGBlBtE13x6NJdjuJmmryL",
+    "date": "2025-02-10",
+    "merchant": "Whole Foods",
+    "category": "FOOD_AND_DRINK",
+    "amount": -85,
+    "included": true
+  },
+  {
+    "transaction_id": "7Kr9JGmAM7U5rPWevkokfoPrdk5q9vI6xxd4N",
+    "date": "2025-02-07",
+    "merchant": "Utility Bill - Electricity",
+    "category": "BILLS_AND_UTILITIES",
+    "amount": -90,
+    "included": true
+  },
+  {
+    "transaction_id": "jWo8eDNVqBsdXxJ69414TBxEv8qay3Fxaa6oo",
+    "date": "2025-02-05",
+    "merchant": "Car Insurance Payment",
+    "category": "BILLS_AND_UTILITIES",
+    "amount": -150,
+    "included": true
+  },
+  {
+    "transaction_id": "PlGByP6pavfe7d8AbDpDcqod4rG6lVI8AAoEb",
+    "date": "2025-02-03",
+    "merchant": "Mortgage Payment - Wells Fargo",
+    "category": "LOAN_PAYMENTS",
+    "amount": -1800,
+    "included": true
+  },
+  {
+    "transaction_id": "NEWre461xvCnqLm3wDEDtKAZbgmB76CoQQyLz",
+    "date": "2025-02-02",
+    "merchant": "Monthly Salary Deposit",
+    "category": "INCOME",
+    "amount": 4000,
+    "included": true
+  }
+]
