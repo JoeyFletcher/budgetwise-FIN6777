@@ -37,6 +37,7 @@
 
 <script>
 import api from '../api';
+import TwoFactorPage from "pages/TwoFactorPage.vue";
 
 export default {
   name: 'LoginPage',
@@ -83,7 +84,11 @@ export default {
         if (response.data.success) {
           console.log('Successful login. Saving token and redirecting.');
           localStorage.setItem('token', response.data.token); // Save token to local storage
-          this.$router.push('/dashboard'); // Redirect to dashboard
+
+          //TODO redirect to a 2fa page to enter the code from email
+          // TODO redirect from 2fa page to /dashboard
+          //this.$router.push('/dashboard'); // Redirect to dashboard
+          this.$router.push('twofactorlock');
         } else {
           // Handle login errors from the server
           console.error('Login error from server:', response.data.error);

@@ -49,6 +49,15 @@ const login = async (req, res) => {
         { expiresIn: '1h' }
       );
 
+      console.log("session id",req.session.id)
+
+      const twoFact = Math.floor(100000 + Math.random() * 500000);
+
+      req.session.twofact = twoFact
+
+      //TODO send code to email endpoint
+      console.log(twoFact)
+
       console.log('📡 Sending login response:', { success: true, token });
       res.status(200).json({ success: true, message: 'Login successful', token });
     });
@@ -58,4 +67,15 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { login };
+const twoFactorAuth = async (req, res) => {
+  console.log("session id",req.session.id)
+
+  console.log(req.session.twofact)
+  const {twoFactorCode} = req.body;
+  console.log( "THIS IS THE SUBMITTED CODE", twoFactorCode)
+  return res.status(200).json();
+}
+
+
+
+module.exports = { login,twoFactorAuth };
