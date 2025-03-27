@@ -22,6 +22,9 @@ const plaidWebhooksRoutes = require("./routes/plaid/plaidWebhooks");
 // 🏦 Import Main Plaid Routes
 const plaidRoutes = require("./routes/plaidRoutes");
 
+// Import Rapid API Routes
+const rapidRoutes = require('./routes/rapidRoutes');
+
 const app = express();
 const PORT = process.env.PORT || 3001;
 
@@ -42,6 +45,7 @@ app.use("/api/signup", signupRoutes);
 app.use("/api/user", authenticate, userRoutes);
 app.use("/api/alpaca", alpacaRoutes);
 app.use("/api/budget", budgetRoutes);
+app.use('/api/rapid', rapidRoutes);
 
 // ✅ Debugging: Log Plaid Routes
 console.log("🏦 Registering Plaid Routes...");
