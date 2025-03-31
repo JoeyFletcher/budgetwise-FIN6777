@@ -56,7 +56,7 @@ export default {
   },
   data() {
     return {
-      selectedTab: 'portfolio',
+      selectedTab: 'sweep',
     };
   },
 };

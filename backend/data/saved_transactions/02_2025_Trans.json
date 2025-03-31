@@ -1,82 +1,92 @@
 [
   {
-    "transaction_id": "Jpo7G36ervi8GNQwDomoHWK9JWo1VaCxy8zwx",
+    "transaction_id": "aMpPnJKWEAsxPZmWzR8vUdKJLRPbZyFZ5XoXW",
     "date": "2025-02-22",
     "merchant": "Interest Earned",
-    "category": "INCOME",
+    "category": "Other",
     "amount": 50,
-    "included": true
+    "included": true,
+    "amortizationMonths": 1
   },
   {
-    "transaction_id": "klg8eVP5K3fGyk746NdNc8Rla8KVJMiaj5MAA",
+    "transaction_id": "4KLpEwDe34s1ekjZNyaECEpWjVKnDasJbm9me",
     "date": "2025-02-21",
     "merchant": "Interest Earned",
     "category": "INCOME",
     "amount": 50,
-    "included": true
+    "included": true,
+    "amortizationMonths": 1
   },
   {
-    "transaction_id": "5lq9wWREQPfJqMKyRvmvsLpVDLJ5agcJnrkj6",
+    "transaction_id": "mqyalW7zeNt1nAlakK8qCG38jK6Q8NcgDNj4g",
     "date": "2025-02-18",
     "merchant": "Uber Ride",
     "category": "TRANSPORTATION",
     "amount": -30,
-    "included": true
+    "included": true,
+    "amortizationMonths": 1
   },
   {
-    "transaction_id": "wPr8z4wV7MfxeM4zGaZaUeRZJe7l1LhMpXnK3",
+    "transaction_id": "b1EwberAalsd9jgAB7p4TlPW39xvWKFmXjLoV",
     "date": "2025-02-15",
     "merchant": "Dining - Local Sushi",
     "category": "FOOD_AND_DRINK",
     "amount": -60,
-    "included": true
+    "included": true,
+    "amortizationMonths": 1
   },
   {
-    "transaction_id": "V3KNXM6Aevtwlp9ByWgWixyLVxod6RflVMGNR",
+    "transaction_id": "nKEbqmekXPsLjRq4zrZKiPZ9J7Gr9EcAjRk38",
     "date": "2025-02-12",
     "merchant": "Netflix",
     "category": "ENTERTAINMENT",
     "amount": -50,
-    "included": true
+    "included": true,
+    "amortizationMonths": 1
   },
   {
-    "transaction_id": "epZmq93VklinmMKXGBlBtE13x6NJdjuJmmryL",
+    "transaction_id": "GpZRrbAlGqCnGbElQRq5i3QXDy8LXPH65v9GJ",
     "date": "2025-02-10",
     "merchant": "Whole Foods",
     "category": "FOOD_AND_DRINK",
     "amount": -85,
-    "included": true
+    "included": true,
+    "amortizationMonths": 1
   },
   {
-    "transaction_id": "7Kr9JGmAM7U5rPWevkokfoPrdk5q9vI6xxd4N",
+    "transaction_id": "AeN4D56GlgUxvXeJ7Q9ZUQLgKa8kg7F9QDw4V",
     "date": "2025-02-07",
     "merchant": "Utility Bill - Electricity",
     "category": "BILLS_AND_UTILITIES",
     "amount": -90,
-    "included": true
+    "included": true,
+    "amortizationMonths": 1
   },
   {
-    "transaction_id": "jWo8eDNVqBsdXxJ69414TBxEv8qay3Fxaa6oo",
+    "transaction_id": "WdNp1wVQoZfZnqWQAKN5UKyXNwBQX3U6k8MP5",
     "date": "2025-02-05",
     "merchant": "Car Insurance Payment",
     "category": "BILLS_AND_UTILITIES",
     "amount": -150,
-    "included": true
+    "included": true,
+    "amortizationMonths": 1
   },
   {
-    "transaction_id": "PlGByP6pavfe7d8AbDpDcqod4rG6lVI8AAoEb",
+    "transaction_id": "E1enqRbyzAsBEQ8ANw95CaLj5gyMjrC4q7QgN",
     "date": "2025-02-03",
     "merchant": "Mortgage Payment - Wells Fargo",
     "category": "LOAN_PAYMENTS",
     "amount": -1800,
-    "included": true
+    "included": true,
+    "amortizationMonths": 1
   },
   {
-    "transaction_id": "NEWre461xvCnqLm3wDEDtKAZbgmB76CoQQyLz",
+    "transaction_id": "83Kvn4A1x7u7BoA9GyqdibEXwKd3XAiWb6aZ6",
     "date": "2025-02-02",
     "merchant": "Monthly Salary Deposit",
     "category": "INCOME",
     "amount": 4000,
-    "included": true
+    "included": true,
+    "amortizationMonths": 1
   }
 ]
