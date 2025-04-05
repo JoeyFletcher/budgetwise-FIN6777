@@ -99,19 +99,21 @@ export default {
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css');
 
 .dashboard-sidebar {
-  width: 100%;
-  max-width: 250px;
-  background-color: #2c3e50;
-  color: #ffffff;
-  padding: 20px;
-  box-sizing: border-box;
-  height: 100vh;
-  font-family: 'Arial, sans-serif';
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-  overflow-y: auto;
+    width: 100%;
+    max-width: 250px;
+    background-color: #2c3e50;
+    color: #ffffff;
+    padding: 20px;
+    box-sizing: border-box;
+    min-height: 100%;
+    height: auto;
+    position: sticky;
+    top: 0;
+    font-family: 'Arial, sans-serif';
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
 }
 
 .dashboard-sidebar.collapsed {

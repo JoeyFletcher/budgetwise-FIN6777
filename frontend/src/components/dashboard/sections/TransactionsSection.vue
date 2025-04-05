@@ -1,6 +1,8 @@
 <template>
   <section class="transactions-section">
     <div class="transactions-container">
+
+      <!-- Header -->
       <div class="header-container">
         <h2>Transaction History</h2>
         <button @click="fetchTransactions" class="refresh-button" :disabled="loading">
@@ -8,30 +10,27 @@
         </button>
       </div>
 
-      <!-- 🔹 Save Transactions with Unique Name -->
+      <!-- Filter (Month Picker) -->
+      <div class="filters">
+        <input v-model="selectedMonth" type="month" class="date-input" />
+      </div>
+
+      <!-- Save Button -->
       <div class="save-container">
-        <input v-model="saveName" placeholder="Enter Save Name..." class="save-input" />
-        <button @click="saveTransactions" class="save-button">
-          <i class="fas fa-save"></i> Save Transactions
+        <button @click="saveTransactions" class="save-button" :disabled="filteredTransactions.length === 0">
+          <i class="fas fa-save"></i> Save Transactions ({{ saveFileName }})
         </button>
       </div>
 
-      <!-- 🔹 Filters: Search & Date Range -->
-      <div class="filters">
-        <input v-model="searchQuery" placeholder="Search Transactions..." class="search-bar" />
-        <label class="filter-label">Date Range:</label>
-        <input type="date" v-model="startDate" class="date-input" />
-        <input type="date" v-model="endDate" class="date-input" />
-      </div>
-
-      <!-- 🔹 Transactions Table -->
-      <table v-if="startDate && endDate && filteredTransactions.length > 0" class="transactions-table">
+      <!-- Transactions Table -->
+      <table v-if="filteredTransactions.length > 0" class="transactions-table">
         <thead>
           <tr>
             <th>Date</th>
             <th>Merchant</th>
             <th>Category</th>
             <th>Amount ($)</th>
+            <th>Amortize Over (Months)</th>
             <th>Include?</th>
           </tr>
         </thead>
@@ -39,43 +38,75 @@
           <tr v-for="txn in filteredTransactions" :key="txn.transaction_id">
             <td>{{ txn.date }}</td>
             <td>{{ txn.merchant }}</td>
-            <td>{{ txn.category }}</td>
+            
+            <!-- Editable Category -->
+            <td>
+              <select v-model="txn.category" class="date-input" style="width: 150px;">
+                <option v-for="cat in availableCategories" :key="cat" :value="cat">{{ cat }}</option>
+              </select>
+            </td>
+
             <td :class="{ 'positive-amount': txn.amount > 0, 'negative-amount': txn.amount < 0 }">
               {{ txn.amount.toFixed(2) }}
+            </td>
+            <td>
+              <input 
+                type="number" 
+                min="1" 
+                v-model.number="txn.amortizationMonths" 
+                class="date-input" 
+                style="width: 80px; text-align: center;" 
+              />
             </td>
             <td><input type="checkbox" v-model="txn.included" /></td>
           </tr>
         </tbody>
       </table>
 
-      <div v-if="startDate && endDate && filteredTransactions.length === 0" class="no-data">
-        No transactions found for the selected date range.
+      <div v-if="filteredTransactions.length === 0 && selectedMonth" class="no-data">
+        No transactions found for the selected month.
       </div>
     </div>
   </section>
 </template>
 
 <script>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, watch } from "vue";
 import api from "../../../api";
 
 export default {
   name: "TransactionsSection",
   setup() {
     const transactions = ref([]);
-    const searchQuery = ref("");
-    const startDate = ref("");
-    const endDate = ref("");
-    const saveName = ref(""); // ✅ Added Save Name Input
+    const selectedMonth = ref("");
     const loading = ref(false);
 
-    // ✅ Fetch Transactions from Backend
+    const startDate = computed(() => selectedMonth.value ? `${selectedMonth.value}-01` : "");
+    const endDate = computed(() => {
+      if (!selectedMonth.value) return "";
+      const [year, month] = selectedMonth.value.split('-');
+      const lastDay = new Date(year, month, 0).getDate();
+      return `${year}-${month}-${lastDay}`;
+    });
+
+    const saveFileName = computed(() => {
+      if (!selectedMonth.value) return "";
+      const [year, month] = selectedMonth.value.split('-');
+      return `${month}_${year}_Trans`;
+    });
+
+    // Compute available categories dynamically + add "Other"
+    const availableCategories = computed(() => {
+      const cats = new Set(transactions.value.map(txn => txn.category));
+      cats.add("OTHER");
+      return Array.from(cats).sort();
+    });
+
     const fetchTransactions = async () => {
       if (!startDate.value || !endDate.value) return;
       loading.value = true;
 
       try {
-        console.log("📡 Fetching transactions...");
         const response = await api.get("/plaid/transactions/list", {
           params: {
             access_token: localStorage.getItem("access_token"),
@@ -91,58 +122,56 @@ export default {
           category: txn.category || "Uncategorized",
           amount: txn.amount,
           included: true,
+          amortizationMonths: 1, // Default = no amortization
         }));
 
-        console.log("✅ Transactions fetched:", transactions.value);
       } catch (error) {
-        console.error("❌ Error fetching transactions:", error);
+        console.error("Error fetching transactions:", error);
       }
-
       loading.value = false;
     };
 
-    // ✅ Save Transactions with Unique Name
     const saveTransactions = async () => {
-      if (!saveName.value.trim()) {
-        alert("⚠️ Please enter a save name.");
+      if (!saveFileName.value) {
+        alert("Please select a month first.");
         return;
       }
-
       try {
         const selectedTransactions = transactions.value.filter(txn => txn.included);
-        console.log("💾 Saving transactions as:", saveName.value, selectedTransactions);
 
-        await api.post("/plaid/transactions/save", { 
-          saveName: saveName.value, 
-          transactions: selectedTransactions 
+        const adjustedTransactions = selectedTransactions.map(txn => ({
+          ...txn,
+          amount: txn.amount / txn.amortizationMonths
+        }));
+
+        await api.post("/plaid/transactions/save", {
+          saveName: saveFileName.value,
+          transactions: adjustedTransactions
         });
 
-        alert("✅ Transactions saved successfully!");
+        alert("Transactions saved successfully!");
       } catch (error) {
-        console.error("❌ Error saving transactions:", error);
+        console.error("Error saving transactions:", error);
         alert("Error saving transactions.");
       }
     };
 
-    // ✅ Filter Transactions Based on Search & Date Range
     const filteredTransactions = computed(() => {
-      return transactions.value
-        .filter(txn => txn.merchant.toLowerCase().includes(searchQuery.value.toLowerCase()))
-        .filter(txn => !startDate.value || txn.date >= startDate.value)
-        .filter(txn => !endDate.value || txn.date <= endDate.value);
+      return transactions.value;
     });
 
-    onMounted(fetchTransactions);
+    watch(selectedMonth, () => {
+      if (selectedMonth.value) fetchTransactions();
+    });
 
     return {
       transactions,
-      searchQuery,
-      startDate,
-      endDate,
-      saveName,
+      selectedMonth,
+      saveFileName,
       fetchTransactions,
       saveTransactions,
       filteredTransactions,
+      availableCategories,
       loading,
     };
   },
@@ -152,11 +181,11 @@ export default {
 <style scoped>
 .transactions-section {
   padding: 40px;
-  background: linear-gradient(135deg, #e3f2fd, #e0f7fa);
+  background: linear-gradient(135deg, #f0f4f8, #e6f0fa);
   border-radius: 10px;
   font-family: "Arial, sans-serif";
-  height: 100%;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  min-height: 100%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 }
 
 .transactions-container {
@@ -164,7 +193,7 @@ export default {
   background-color: #ffffff;
   padding: 30px;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
   max-width: 1000px;
   margin: auto;
 }
@@ -176,15 +205,22 @@ export default {
   margin-bottom: 20px;
 }
 
-.refresh-button, .save-button {
-  background: #007bff;
-  color: white;
+.refresh-button, 
+.save-button {
+  background: #3399ff;
+  color: #fff;
   border: none;
   padding: 10px 20px;
   font-size: 1rem;
   cursor: pointer;
   margin-left: 10px;
   border-radius: 5px;
+  transition: background 0.3s ease;
+}
+
+.refresh-button:hover, 
+.save-button:hover {
+  background: #287acc;
 }
 
 .save-button i {
@@ -193,37 +229,60 @@ export default {
 
 .filters {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  align-items: center;
   margin-bottom: 20px;
-  gap: 10px;
+  gap: 15px;
   color: #333;
+  flex-wrap: wrap;
 }
 
 .search-bar,
 .date-input {
-  padding: 8px;
+  padding: 10px;
   border-radius: 5px;
   border: 1px solid #ccc;
   font-size: 1rem;
+  width: 250px;
+  background: #fafafa;
+  color: #333;
+}
+
+.search-bar::placeholder,
+.date-input::placeholder {
+  color: #999;
 }
 
 .transactions-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   margin-top: 20px;
-}
-
-.transactions-table th,
-.transactions-table td {
-  border: 1px solid #ddd;
-  padding: 10px;
-  text-align: center;
-  color: #333;
+  border-radius: 5px;
+  overflow: hidden;
 }
 
 .transactions-table th {
-  background-color: #007bff;
-  color: white;
+  background-color: #f5f7fa;
+  color: #333;
+  padding: 12px;
+  font-weight: 600;
+  border-bottom: 2px solid #ddd;
+}
+
+.transactions-table td {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+  color: #333;
+  background: #fff;
+}
+
+.transactions-table tr:nth-child(even) td {
+  background: #fafafa;
+}
+
+.transactions-table tr:hover td {
+  background: #f1f5f9;
 }
 
 .positive-amount {
@@ -239,6 +298,14 @@ export default {
 .no-data {
   margin-top: 20px;
   font-size: 1.2rem;
-  color: #666;
+  color: #999;
+}
+
+button, input {
+  transition: all 0.2s ease-in-out;
+}
+
+.header-container h2 {
+  color: #333;
 }
 </style>
