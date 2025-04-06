@@ -4,6 +4,7 @@ import LoginPage from '../pages/LoginPage.vue';
 import SignupPage from '../pages/SignupPage.vue';
 import DashboardPage from '../pages/DashboardPage.vue';
 import ForgotPassword from '../pages/ForgotPassword.vue';
+import TwoFactorPage from "pages/TwoFactorPage.vue";
 
 // Import dashboard sections using relative paths
 import TransactionsSection from '../components/dashboard/sections/TransactionsSection.vue';
@@ -23,6 +24,11 @@ const routes = [
     path: '/login',
     name: 'LoginPage',
     component: LoginPage,
+  },
+  {
+    path: '/twofactorlock',
+    name: 'TwoFactorPage',
+    component: TwoFactorPage,
   },
   {
     path: '/signup',

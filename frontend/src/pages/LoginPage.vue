@@ -19,7 +19,8 @@
             <input type="password" id="password" v-model="password" />
             <span v-if="passwordError" class="error-message">{{ passwordError }}</span>
           </div>
-          <button type="button" @click="submitLogin">Login</button>
+          <LoadingSpinner v-if="loading" message="Logging in..." />
+          <button type="button" @click="submitLogin" :disabled="loading">Login</button>
         </form>
         <p class="signup-link">Don't have an account? <router-link to="/signup">Sign up here</router-link>.</p>
         <p class="forgot-password-link"><router-link to="/forgot-password">Forgot your password?</router-link></p>
@@ -37,15 +38,20 @@
 
 <script>
 import api from '../api';
+import LoadingSpinner from '../components/common/LoadingSpinner.vue';
 
 export default {
   name: 'LoginPage',
+  components: {
+    LoadingSpinner
+  },
   data() {
     return {
       usernameOrEmail: '',
       password: '',
       usernameOrEmailError: '',
-      passwordError: ''
+      passwordError: '',
+      loading: false
     };
   },
   methods: {
@@ -70,6 +76,7 @@ export default {
       }
 
       try {
+        this.loading = true;
         console.log("Sending login request to backend...");
         // Send data to the backend for login using Axios instance
         const response = await api.post('/auth/login', {
@@ -82,8 +89,7 @@ export default {
         // Handle successful login
         if (response.data.success) {
           console.log('Successful login. Saving token and redirecting.');
-          localStorage.setItem('token', response.data.token); // Save token to local storage
-          this.$router.push('/dashboard'); // Redirect to dashboard
+          this.$router.push('twofactorlock'); //
         } else {
           // Handle login errors from the server
           console.error('Login error from server:', response.data.error);
@@ -104,6 +110,8 @@ export default {
           console.error("An unknown error occurred:", error);
           this.usernameOrEmailError = 'An unknown error occurred. Please try again later.';
         }
+      } finally {
+        this.loading = false;
       }
     }
   }
@@ -207,9 +215,15 @@ button {
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
 }
 
-button:hover {
+button:hover:not(:disabled) {
   background-color: #2e177a;
   transform: scale(1.05);
+}
+
+button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .error-message {

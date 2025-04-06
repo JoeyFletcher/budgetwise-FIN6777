@@ -38,6 +38,7 @@
             <input type="password" id="confirmPassword" v-model="confirmPassword" />
             <span v-if="passwordError" class="error-message">{{ passwordError }}</span>
           </div>
+          <LoadingSpinner v-if="loading" message="Signing up..." />
           <button type="submit" :disabled="loading">Sign Up</button>
         </form>
         <p class="login-link">Already have an account? <router-link to="/login">Login here</router-link>.</p>
@@ -52,10 +53,14 @@
 </template>
 
 <script>
+import LoadingSpinner from '../components/common/LoadingSpinner.vue';
 import api from '../api';
 
 export default {
   name: 'SignupPage',
+  components: {
+    LoadingSpinner
+  },
   data() {
     return {
       username: '',

@@ -2,6 +2,10 @@ require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const session = require('express-session')
+const cookieParser = require('cookie-parser')
+const {RedisStore} = require("connect-redis")
+const {createClient} = require ("redis")
 
 // Import Middleware
 const authenticate = require("./middleware/authMiddleware");
@@ -28,9 +32,35 @@ const rapidRoutes = require('./routes/rapidRoutes');
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+const redisClient = createClient({
+  host: process.env.REDIS_HOST || 'localhost',
+  port: process.env.REDIS_PORT || 6379,
+  password: process.env.REDIS_PASSWORD || ''
+});
+redisClient.connect().catch(console.error)
+
 // Middleware setup
+let redisStore = new RedisStore({
+  client: redisClient,
+  prefix: "budgetSession:",
+})
+app.use(cookieParser())
+app.use(session({
+  secret: 'something secure',
+  resave: false,
+  saveUninitialized: true,
+  store: redisStore,
+  cookie: {
+    secure: false,
+    maxAge: 600000
+  },
+  name: 'sessionId'
+}));
 app.use(bodyParser.json());
-app.use(cors({ origin: "http://localhost:9000", optionsSuccessStatus: 200 }));
+app.use(cors({ 
+  origin: 'http://localhost:9000',
+  credentials: true,
+}));
 
 // ✅ Debugging: Log registered routes
 console.log("🔗 Registering General Routes...");
