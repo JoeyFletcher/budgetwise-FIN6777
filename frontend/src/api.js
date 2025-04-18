@@ -3,6 +3,7 @@ import axios from 'axios';
 // Base API instance
 const api = axios.create({
   baseURL: 'http://localhost:3001/api', // Adjust if your backend runs elsewhere
+  withCredentials: true // This is important for handling cookies
 });
 
 // Get auth token from local storage
